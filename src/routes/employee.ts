@@ -1,4 +1,5 @@
 import express, { Request, Response, Router } from "express";
+import { employeeController } from "../controllers/employee";
 
 const router = express.Router()
 
@@ -11,12 +12,7 @@ router.get('/signin', (req: Request, res: Response) => {
 })
 
 // server routes
-router.post('/auth/signin', (req: Request, res: Response) => {
-    console.log(req.body)
-    res.json(req.body)
-})
-router.post('/auth/signup', (req: Request, res: Response) => {
-    console.log(req.body)
-    res.json(req.body)
-})
+router.post('/auth/signin', employeeController.signin)
+router.post('/auth/signup', employeeController.signup)
+
 export const employeeRouter = router
