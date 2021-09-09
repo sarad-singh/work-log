@@ -38,3 +38,7 @@ export interface Employee {
     department: string,
     password: string
 }
+
+export interface EmployeeDashboardData {
+    profile: Employee
+}
