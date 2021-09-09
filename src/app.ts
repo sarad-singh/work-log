@@ -11,4 +11,3 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(config.port, () => {
     console.log(`App started on port: ${config.port}`)
 })
-
