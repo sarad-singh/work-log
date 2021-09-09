@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import { employeeController } from "../controllers/employee";
+import { employeeValidationMiddleware } from "../middlewares/validations/employee/employee";
 
 const router = express.Router()
 
@@ -12,7 +13,7 @@ router.get('/signin', (req: Request, res: Response) => {
 })
 
 // server routes
-router.post('/auth/signin', employeeController.signin)
-router.post('/auth/signup', employeeController.signup)
+router.post('/auth/signin', employeeValidationMiddleware.signin, employeeController.signin)
+router.post('/auth/signup', employeeValidationMiddleware.signup, employeeController.signup)
 
 export const employeeRouter = router

@@ -4,7 +4,7 @@ import { config } from './config/config'
 import { employeeRouter } from './routes/employee';
 
 export const app = express()
-app.set('view engine', 'ejs');
+app.set('view engine', 'hbs');
 
 app.use(morgan('tiny'))
 app.use(express.urlencoded({ extended: false }))

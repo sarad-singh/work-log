@@ -7,12 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Work Log - Employee Signin</title>
 </head>
+<style>
+    .text-danger {
+        color: rgb(250, 59, 59);
+    }
+</style>
 
 <body>
     <h1>Employee Signin</h1>
     <form action="/employee/auth/signin" method="POST">
-        <input type="email" placeholder="email">
-        <input type="password" placeholder="password">
+        <input type="email" name="email" id="email" placeholder="email" value="{{data.email}}">
+        <span class="text-danger">{{errors.email}}</span><br>
+
+        <input type="password" name="password" id="password" placeholder="password" value="{{data.password}}">
+        <span class="text-danger">{{errors.password}}</span><br>
         <button type="submit">Signin</button>
     </form>
 </body>
