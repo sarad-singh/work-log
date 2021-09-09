@@ -16,6 +16,7 @@
 <body>
     <h1>Employee Signin</h1>
     <form action="/employee/auth/signin" method="POST">
+        <span class="text-danger">{{errorMessage}}</span><br>
         <input type="email" name="email" id="email" placeholder="email" value="{{data.email}}">
         <span class="text-danger">{{errors.email}}</span><br>
 

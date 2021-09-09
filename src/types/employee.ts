@@ -23,3 +23,18 @@ export interface SigninEmployeeErros {
     email: string,
     password: string
 }
+
+export interface CreateEmployee {
+    name: string,
+    email: string,
+    department: string,
+    password: string
+}
+
+export interface Employee {
+    id: number
+    name: string,
+    email: string,
+    department: string,
+    password: string
+}
