@@ -1,9 +1,11 @@
 import express, { Request, Response } from 'express'
 import morgan from 'morgan';
 import { config } from './config/config'
+import { db } from './database/db';
 import { employeeRouter } from './routes/employee';
 
-export const app = express()
+db.checkConnection()
+const app = express()
 app.set('view engine', 'hbs');
 
 app.use(morgan('tiny'))

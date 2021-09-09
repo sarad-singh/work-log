@@ -16,6 +16,8 @@
 <body>
     <h1>Employee Signup</h1>
     <form action="/employee/auth/signup" method="POST">
+        <span class="text-danger">{{errorMessage}}</span><br>
+
         <input type="text" name="name" id="name" placeholder="name" value="{{data.name}}">
         <span class="text-danger">{{errors.name}}</span><br>
 
@@ -31,7 +33,7 @@
         <input type="password" name="confirmPassword" id="confirm-password" placeholder="confirm password"
             value="{{data.confirmPassword}}">
         <span class="text-danger">{{errors.confirmPassword}}</span><br>
-        <button type="submit">Signin</button>
+        <button type="submit">Signup</button>
     </form>
 </body>
 

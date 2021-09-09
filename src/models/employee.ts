@@ -1,7 +1,8 @@
 import { Department } from "../constansts/department";
+import { db } from "../database/db";
 import { CreateEmployee, Employee } from "../types/employee";
 
-const employee: Employee = {
+const employeee: Employee = {
     id: 1,
     name: "John Doe",
     email: "john.doe@gmail.com",
@@ -9,7 +10,7 @@ const employee: Employee = {
     department: Department.SE
 }
 
-let employees: Employee[] = [employee]
+let employees: Employee[] = [employeee]
 
 
 const findAll = async (): Promise<Employee[]> => {
@@ -17,17 +18,15 @@ const findAll = async (): Promise<Employee[]> => {
 }
 
 const findOne = async (email: string): Promise<Employee> => {
-    return employee
+    const query = `SELECT * FROM \`employee\` WHERE \`email\`="${email}"`
+    let result: Employee[] = await db.query<Employee>(query)
+    return result[0]
 }
 
-const create = async (employee: CreateEmployee): Promise<Employee> => {
-    let id = employees.length + 1
-    let newEmployee: Employee = {
-        id,
-        ...employee
-    }
-    employees.push(newEmployee)
-    return newEmployee
+const create = async (employee: CreateEmployee): Promise<boolean> => {
+    const query = `INSERT INTO \`employee\` (\`name\`, \`department\`, \`email\`, \`password\`) VALUES ("${employee.name}", "${employee.department}", "${employee.email}", "${employee.password}")`
+    let result: Employee[] = await db.query<Employee>(query)
+    return (result) ? true : false
 }
 
 export const EmployeeModel = {

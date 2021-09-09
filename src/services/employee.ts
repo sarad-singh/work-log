@@ -8,7 +8,7 @@ const signin = async (email: string, password: string): Promise<Employee | null>
     return null
 }
 
-const signup = async (employee: CreateEmployee): Promise<Employee> => {
+const signup = async (employee: CreateEmployee): Promise<boolean> => {
     return EmployeeModel.create(employee)
 }
 
