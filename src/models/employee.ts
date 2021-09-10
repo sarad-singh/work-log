@@ -18,14 +18,14 @@ const findAll = async (): Promise<Employee[]> => {
 }
 
 const findOne = async (email: string): Promise<Employee> => {
-    const query = `SELECT * FROM \`employee\` WHERE \`email\`="${email}"`
-    let result: Employee[] = await db.query<Employee>(query)
+    const query = "SELECT * FROM  `EMPLOYEE` WHERE ?"
+    const result: Employee[] = await db.query<Employee>(query, [{ email }])
     return result[0]
 }
 
 const create = async (employee: CreateEmployee): Promise<boolean> => {
-    const query = `INSERT INTO \`employee\` (\`name\`, \`department\`, \`email\`, \`password\`) VALUES ("${employee.name}", "${employee.department}", "${employee.email}", "${employee.password}")`
-    let result: Employee[] = await db.query<Employee>(query)
+    const query = `INSERT INTO \`EMPLOYEE\` SET ?`
+    const result: Employee[] = await db.query<Employee>(query, [employee])
     return (result) ? true : false
 }
 
