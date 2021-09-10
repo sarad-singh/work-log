@@ -46,11 +46,11 @@ const dashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
         const token = req.cookies.token
         const payload = await EmployeeService.decodeToken(token) as EmployeeTokenPayload
-        const data = await EmployeeService.getDashboard(payload.email)
-        if (!data) {
+        const dashboardData = await EmployeeService.getDashboard(payload.email)
+        if (!dashboardData) {
             return res.render('employee/signin', { errorMessage: "Please signin" })
         }
-        return res.render('employee/dashboard', { data })
+        return res.render('employee/dashboard', { data: dashboardData })
     } catch (err) {
         console.log("Error with employee signin.")
         console.log(err)
