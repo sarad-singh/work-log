@@ -5,11 +5,12 @@ import { EmployeeService } from "../services/employee";
 import { CreateEmployee } from "../types/employee";
 
 const signup: RequestHandler = async (req: Request, res: Response) => {
-    const createEmployee: CreateEmployee = req.body
+    const { name, email, department, password } = req.body
+    const createEmployee: CreateEmployee = { name, email, department, password }
     try {
         const employee = await EmployeeService.signup(createEmployee)
         if (employee)
-            return res.render('employee/dashboard', { data: employee })
+            return res.render('employee/signin', { successMessage: "Signup Successfull. Please login." })
         return res.render('employee/signup', { errorMessage: "Unable to signup", data: createEmployee })
     } catch (err) {
         console.log("Error with employee signup.")
