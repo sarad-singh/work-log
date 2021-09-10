@@ -24,11 +24,7 @@ const signin: RequestHandler = async (req: Request, res: Response) => {
     try {
         const employee = await EmployeeService.signin(email, password)
         if (employee) {
-            let payload = {
-                id: employee.id,
-                email: employee.email
-            }
-            let token = jwt.sign({ employee: payload }, config.jwt.secret, config.jwt.otions)
+            const token = await EmployeeService.generateToken({ id: employee.id, email: employee.email })
             res.cookie('token', token, { maxAge: config.cookieAge })
             return res.redirect('/employee/dashboard')
         }

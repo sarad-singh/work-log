@@ -24,6 +24,11 @@ export interface SigninEmployeeErros {
     password: string
 }
 
+export interface EmployeeTokenPayload {
+    id: number,
+    email: string
+}
+
 export interface CreateEmployee {
     name: string,
     email: string,
