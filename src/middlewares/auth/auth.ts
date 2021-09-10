@@ -4,15 +4,15 @@ import { EmployeeService } from "../../services/employee"
 const checkToken = (tokenUser: 'admin' | 'employee'): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const token: string = req.cookies.token
-            console.log(token)
-            if (!token || typeof token !== 'string')
+            const token = req.cookies.token as string
+            if (!token || typeof token !== 'string') {
                 return res.render(`${tokenUser}/signin`, { errorMessage: "Please signin" })
+            }
 
             const payload: any = await EmployeeService.decodeToken(token)
-            console.log(payload)
-            if (!payload[`${tokenUser}`])
+            if (!payload[`${tokenUser}`]) {
                 return res.render(`${tokenUser}/signin`, { errorMessage: "Please signin" })
+            }
 
             next()
         } catch (err) {

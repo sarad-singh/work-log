@@ -1,6 +1,4 @@
 import express, { Request, Response } from 'express'
-import jwt from 'jsonwebtoken';
-
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { config } from './config/config'

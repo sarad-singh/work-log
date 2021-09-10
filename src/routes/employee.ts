@@ -6,12 +6,8 @@ import { employeeValidationMiddleware } from "../middlewares/validations/employe
 const router = express.Router()
 
 // page routes
-router.get('/signup', (req: Request, res: Response) => {
-    res.render('employee/signup')
-})
-router.get('/signin', (req: Request, res: Response) => {
-    res.render('employee/signin')
-})
+router.get('/signup', (req: Request, res: Response) => { res.render('employee/signup') })
+router.get('/signin', (req: Request, res: Response) => { res.render('employee/signin') })
 router.get('/dashboard', authMiddleware.checkToken('employee'), employeeController.dashboard)
 
 // server routes

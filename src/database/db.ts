@@ -3,9 +3,9 @@ import { config } from '../config/config';
 
 const pool = mysql.createPool(config.db);
 
-const query = async  <T>(query: string, values: any[] = []): Promise<T[]> => {
+const query = async (query: string, values: any[] = []) => {
     const [result] = await pool.query(query, values)
-    const data = JSON.parse(JSON.stringify(result)) as T[]
+    const data = JSON.parse(JSON.stringify(result))
     return data
 }
 
