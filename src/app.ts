@@ -17,8 +17,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/employee', employeeRouter)
 
 app.get('/', (req: Request, res: Response) => {
-    res.render('index')
+    return res.render('index')
 })
 app.listen(config.port, () => {
-    console.log(`App started on port: ${config.port}`)
+    return console.log(`App started on port: ${config.port}`)
 })

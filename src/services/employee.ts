@@ -25,9 +25,9 @@ const generateToken = async (payload: EmployeeTokenPayload): Promise<string> => 
 }
 
 const decodeToken = async (token: string): Promise<EmployeeTokenPayload | null> => {
-    let stringPayload = jwt.verify(token, config.jwt.secret)
-    let payload = JSON.parse(JSON.stringify(stringPayload)) as EmployeeTokenPayload
-    if (!payload.id || !payload.email)
+    const stringPayload = jwt.verify(token, config.jwt.secret)
+    const payload = JSON.parse(JSON.stringify(stringPayload))
+    if (!payload.employee || !payload.employee.id || !payload.employee.email)
         return null
     return payload
 }
