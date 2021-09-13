@@ -10,6 +10,7 @@ const router = express.Router()
 router.get('/signup', (req: Request, res: Response) => { res.render('employee/signup') })
 router.get('/signin', (req: Request, res: Response) => { res.render('employee/signin') })
 router.get('/dashboard', authMiddleware.checkToken(UserType.EMPLOYEE), employeeController.dashboard)
+router.get('/create-log', authMiddleware.checkToken(UserType.EMPLOYEE), (req: Request, res: Response) => { res.render('employee/create-log') })
 
 // server routes
 router.post('/auth/signin', employeeValidationMiddleware.signin, employeeController.signin)
