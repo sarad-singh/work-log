@@ -18,14 +18,14 @@
             <th>title</th>
             <th>description</th>
             <th>date</th>
-            <th>actions</th>
+            <th>edit</th>
         </tr>
         {{#each data.logs}}
         <tr>
             <td>{{this.title}}</td>
             <td>{{this.description}}</td>
             <td>{{toLocaleDateString this.createdDate}}</td>
-            <td><a href="#">Edit</a> <a href="#">Delete</a></td>
+            <td><a href="/employee/edit-log/{{this.id}}">Edit</a></td>
         </tr>
         {{/each}}
 

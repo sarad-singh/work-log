@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken"
+import { deflateSync } from "zlib"
 import { config } from "../config/config"
 import { EmployeeModel } from "../models/employee"
+import { LogModel } from "../models/log"
 import { CreateEmployee, Employee, EmployeeDashboardData, UserTokenPayload } from "../types/employee"
-import { Log } from "../types/log"
+import { EditLog, Log } from "../types/log"
 import { LogService } from "./log"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
@@ -37,8 +39,21 @@ const decodeToken = async (token: string): Promise<UserTokenPayload | null> => {
 }
 
 const getLogs = async (id: number): Promise<Log[]> => {
-    const logs = await LogService.find({ employeeId: id })
-    return logs
+    return LogService.find({ employeeId: id })
+}
+
+const editLog = async (editLog: EditLog): Promise<boolean> => {
+    const log: Log = await LogService.findOne(editLog.id)
+    const createdDate = (new Date(log.createdDate))
+    const todayDate = (new Date())
+
+    if ((createdDate.getFullYear() != todayDate.getFullYear())
+        || (createdDate.getMonth() != todayDate.getMonth())
+        || (createdDate.getDay() != todayDate.getDay())
+    ) {
+        return false
+    }
+    return await LogService.edit(editLog)
 }
 
 export const EmployeeService = {
@@ -47,5 +62,6 @@ export const EmployeeService = {
     getDashboard,
     generateToken,
     decodeToken,
-    getLogs
+    getLogs,
+    editLog
 }

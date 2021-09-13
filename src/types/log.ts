@@ -1,9 +1,19 @@
 export interface CreateLog {
     title: string,
     description: string,
-    createdDate: Date,
     employeeId: number
 }
-export interface Log extends CreateLog {
+
+export interface EditLog {
+    id: number,
+    title: string,
+    description: string
+}
+
+export interface Log {
     id: number
+    title: string,
+    description: string,
+    createdDate: Date,
+    employeeId: number
 }

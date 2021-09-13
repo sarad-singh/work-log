@@ -2,8 +2,8 @@ import { Request, RequestHandler, Response } from "express";
 import { config } from "../config/config";
 import { EmployeeService } from "../services/employee";
 import { LogService } from "../services/log";
-import { CreateEmployee, UserTokenPayload } from "../types/employee";
-import { CreateLog } from "../types/log";
+import { CreateEmployee, EmployeeDashboardData, UserTokenPayload } from "../types/employee";
+import { CreateLog, EditLog } from "../types/log";
 
 const signup: RequestHandler = async (req: Request, res: Response) => {
     const { name, email, department, password } = req.body
@@ -60,21 +60,52 @@ const dashboard: RequestHandler = async (req: Request, res: Response) => {
 }
 
 const createLog: RequestHandler = async (req: Request, res: Response) => {
-    const token = req.cookies.token
-    const payload = await EmployeeService.decodeToken(token) as UserTokenPayload
-    const employeeId = payload.id
-    const { title, description } = req.body
-    const createLog: CreateLog = { title, description, createdDate: new Date(), employeeId }
     try {
+        const token = req.cookies.token
+        const payload = await EmployeeService.decodeToken(token) as UserTokenPayload
+        const employeeId = payload.id
+        const { title, description } = req.body
+        const createLog: CreateLog = { title, description, employeeId }
         const result = await LogService.create(createLog)
         if (!result) {
-            return res.render('employee/create-log', { errorMeassage: "Couldn't create log at moment", data: { createLog } })
+            return res.render('employee/create-log', {
+                errorMeassage: "Couldn't create log at moment",
+                data: { createLog }
+            })
         }
         return res.render('employee/create-log', { successMessage: "Log created successfully", data: {} })
     } catch (err) {
         console.log("Error with employee create-log.")
         console.log(err)
-        return res.render('employee/create-log', { errorMessage: "Server Error", data: createLog })
+        return res.render('employee/create-log', { errorMessage: "Server Error", data: req.body })
+    }
+}
+
+const editLog: RequestHandler = async (req: Request, res: Response) => {
+    const { title, description, createdDate } = req.body
+    const id = req.params.id
+    try {
+        const logId: number = parseInt(id)
+        const editLog: EditLog = { id: logId, title, description }
+        const result = await EmployeeService.editLog(editLog)
+        if (!result) {
+            return res.render(`employee/edit-log`, {
+                errorMessage: "Couldn't edit log at moment",
+                data: { id, title, description, createdDate }
+            })
+        }
+        return res.render(`employee/edit-log`, {
+            successMessage: "Log edited successfully",
+            data: { id, title, description, createdDate }
+        })
+    } catch (err) {
+        console.log("Error with employee edit-log.")
+        console.log(err)
+        return res.render(`employee/edit-log`, {
+            errorMessage: "Server Error",
+            data: { id, title, description, createdDate }
+        }
+        )
     }
 }
 
@@ -83,5 +114,6 @@ export const employeeController = {
     signup,
     logout,
     dashboard,
-    createLog
+    createLog,
+    editLog
 }
