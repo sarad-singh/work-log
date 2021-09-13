@@ -1,7 +1,9 @@
 import { Request, RequestHandler, Response } from "express";
 import { config } from "../config/config";
 import { EmployeeService } from "../services/employee";
-import { CreateEmployee } from "../types/employee";
+import { LogService } from "../services/log";
+import { CreateEmployee, UserTokenPayload } from "../types/employee";
+import { CreateLog } from "../types/log";
 
 const signup: RequestHandler = async (req: Request, res: Response) => {
     const { name, email, department, password } = req.body
@@ -43,10 +45,8 @@ const logout: RequestHandler = async (req: Request, res: Response) => {
 
 const dashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
-
         const token = req.cookies.token
         const payload = await EmployeeService.decodeToken(token)
-        console.log(payload)
         const dashboardData = await EmployeeService.getDashboard(payload!.email)
         if (!dashboardData) {
             return res.render('employee/signin', { errorMessage: "Please signin" })
@@ -59,9 +59,29 @@ const dashboard: RequestHandler = async (req: Request, res: Response) => {
     }
 }
 
+const createLog: RequestHandler = async (req: Request, res: Response) => {
+    const token = req.cookies.token
+    const payload = await EmployeeService.decodeToken(token) as UserTokenPayload
+    const employeeId = payload.id
+    const { title, description } = req.body
+    const createLog: CreateLog = { title, description, createdDate: new Date(), employeeId }
+    try {
+        const result = await LogService.create(createLog)
+        if (!result) {
+            return res.render('employee/create-log', { errorMeassage: "Couldn't create log at moment", data: { createLog } })
+        }
+        return res.render('employee/create-log', { successMessage: "Log created successfully", data: {} })
+    } catch (err) {
+        console.log("Error with employee create-log.")
+        console.log(err)
+        return res.render('employee/create-log', { errorMessage: "Server Error", data: createLog })
+    }
+}
+
 export const employeeController = {
     signin,
     signup,
     logout,
-    dashboard
+    dashboard,
+    createLog
 }
