@@ -8,7 +8,7 @@ const findAll = async (): Promise<Employee[]> => {
     return result
 }
 
-const findOne = async (param: { id: string } | { email: string }): Promise<Employee> => {
+const findOne = async (param: { id: number } | { email: string }): Promise<Employee> => {
     const query = "SELECT * FROM  `EMPLOYEE` WHERE ?"
     const result: Employee[] = await db.query(query, [param])
     return result[0]
