@@ -2,9 +2,10 @@ import jwt from "jsonwebtoken"
 import { config } from "../config/config"
 import { EmployeeModel } from "../models/employee"
 import { CreateEmployee, Employee, EmployeeDashboardData, UserTokenPayload } from "../types/employee"
+import { LogService } from "./log"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
-    const employee: Employee = await EmployeeModel.findOne(email)
+    const employee: Employee = await EmployeeModel.findOne({ email })
     if (employee && employee.password == password)
         return employee
     return null
@@ -14,9 +15,10 @@ const signup = async (employee: CreateEmployee): Promise<boolean> => {
     return EmployeeModel.create(employee)
 }
 
-const getDashboard = async (email: string): Promise<EmployeeDashboardData> => {
-    const profile = await EmployeeModel.findOne(email)
-    return { profile }
+const getDashboard = async (id: number): Promise<EmployeeDashboardData> => {
+    const profile = await EmployeeModel.findOne({ id })
+    const logs = await LogService.find({ employeeId: id })
+    return { profile, logs }
 }
 
 const generateToken = async (id: number, email: string): Promise<string> => {

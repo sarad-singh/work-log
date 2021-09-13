@@ -1,3 +1,5 @@
+import { Log } from "./log";
+
 export interface SignupEmployee {
     name: string,
     email: string,
@@ -46,5 +48,6 @@ export interface Employee {
 }
 
 export interface EmployeeDashboardData {
-    profile: Employee
+    profile: Employee,
+    logs: Log[]
 }
