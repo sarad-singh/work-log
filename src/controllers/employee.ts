@@ -1,8 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
-import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 import { EmployeeService } from "../services/employee";
-import { CreateEmployee, EmployeeTokenPayload } from "../types/employee";
+import { CreateEmployee } from "../types/employee";
 
 const signup: RequestHandler = async (req: Request, res: Response) => {
     const { name, email, department, password } = req.body
@@ -27,7 +26,7 @@ const signin: RequestHandler = async (req: Request, res: Response) => {
         if (!employee) {
             return res.render('employee/signin', { errorMessage: "Ceredentials didn't match", data: { email, password } })
         }
-        const token = await EmployeeService.generateToken({ id: employee.id, email: employee.email })
+        const token = await EmployeeService.generateToken(employee.id, employee.email)
         res.cookie('token', token, { maxAge: config.cookieAge })
         return res.redirect('/employee/dashboard')
     } catch (err) {
@@ -44,9 +43,11 @@ const logout: RequestHandler = async (req: Request, res: Response) => {
 
 const dashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
+
         const token = req.cookies.token
-        const payload = await EmployeeService.decodeToken(token) as EmployeeTokenPayload
-        const dashboardData = await EmployeeService.getDashboard(payload.email)
+        const payload = await EmployeeService.decodeToken(token)
+        console.log(payload)
+        const dashboardData = await EmployeeService.getDashboard(payload!.email)
         if (!dashboardData) {
             return res.render('employee/signin', { errorMessage: "Please signin" })
         }

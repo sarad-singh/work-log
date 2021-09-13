@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 import { config } from "../config/config"
 import { EmployeeModel } from "../models/employee"
-import { CreateEmployee, Employee, EmployeeDashboardData, EmployeeTokenPayload } from "../types/employee"
+import { CreateEmployee, Employee, EmployeeDashboardData, UserTokenPayload } from "../types/employee"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne(email)
@@ -19,15 +19,15 @@ const getDashboard = async (email: string): Promise<EmployeeDashboardData> => {
     return { profile }
 }
 
-const generateToken = async (payload: EmployeeTokenPayload): Promise<string> => {
-    const token = jwt.sign({ employee: payload }, config.jwt.secret, config.jwt.otions)
+const generateToken = async (id: number, email: string): Promise<string> => {
+    const token = jwt.sign({ id, email, userType: 'employee' }, config.jwt.secret, config.jwt.otions)
     return token
 }
 
-const decodeToken = async (token: string): Promise<EmployeeTokenPayload | null> => {
+const decodeToken = async (token: string): Promise<UserTokenPayload | null> => {
     const stringPayload = jwt.verify(token, config.jwt.secret)
-    const payload = JSON.parse(JSON.stringify(stringPayload))
-    if (!payload.employee || !payload.employee.id || !payload.employee.email) {
+    const payload: UserTokenPayload = JSON.parse(JSON.stringify(stringPayload))
+    if (!payload.id || !payload.email) {
         return null
     }
     return payload
