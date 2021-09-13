@@ -51,7 +51,6 @@ const dashboard: RequestHandler = async (req: Request, res: Response) => {
         if (!dashboardData) {
             return res.render('employee/signin', { errorMessage: "Please signin" })
         }
-        console.log(dashboardData)
         return res.render('employee/dashboard', { data: dashboardData })
     } catch (err) {
         console.log("Error with employee signin.")
