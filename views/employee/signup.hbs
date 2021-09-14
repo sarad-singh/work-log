@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Log - Employee Singup</title>
+    <style>
+        .text-danger {
+            color: rgb(250, 59, 59);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Employee Signup</h1>
+    <form action="/employee/auth/signup" method="POST">
+        <span class="text-danger">{{errorMessage}}</span><br>
+
+        <input type="text" name="name" id="name" placeholder="name" value="{{data.name}}">
+        <span class="text-danger">{{errors.name}}</span><br>
+
+        <input type="email" name="email" id="email" placeholder="email" value="{{data.email}}">
+        <span class="text-danger">{{errors.email}}</span><br>
+
+        <input type="text" name="department" id="department" placeholder="department" value="{{data.department}}">
+        <span class="text-danger">{{errors.department}}</span><br>
+
+        <input type="password" name="password" id="password" placeholder="password" value="{{data.password}}">
+        <span class="text-danger">{{errors.password}}</span><br>
+
+        <input type="password" name="confirmPassword" id="confirm-password" placeholder="confirm password"
+            value="{{data.confirmPassword}}">
+        <span class="text-danger">{{errors.confirmPassword}}</span><br>
+        <button type="submit">Signup</button>
+    </form>
+</body>
+
+</html>
