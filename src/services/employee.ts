@@ -4,7 +4,7 @@ import { config } from "../config/config"
 import { EmployeeModel } from "../models/employee"
 import { LogModel } from "../models/log"
 import { CreateEmployee, Employee, EmployeeDashboardData, UserTokenPayload } from "../types/employee"
-import { EditLog, Log } from "../types/log"
+import { CreateLog, EditLog, Log } from "../types/log"
 import { LogService } from "./log"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
@@ -42,6 +42,10 @@ const getLogs = async (id: number): Promise<Log[]> => {
     return LogService.find({ employeeId: id })
 }
 
+const createLog = async (createLog: CreateLog): Promise<boolean> => {
+    return LogService.create(createLog)
+}
+
 const editLog = async (editLog: EditLog): Promise<boolean> => {
     const log: Log = await LogService.findOne(editLog.id)
     const createdDate = (new Date(log.createdDate))
@@ -63,5 +67,6 @@ export const EmployeeService = {
     generateToken,
     decodeToken,
     getLogs,
+    createLog,
     editLog
 }
