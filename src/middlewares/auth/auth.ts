@@ -1,20 +1,27 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
-import jwt from 'jsonwebtoken'
-import { config } from "../../config/config"
+import { UserType } from "../../constansts/userTypes"
+import { EmployeeService } from "../../services/employee"
+import { UserTokenPayload } from "../../types/employee"
 
-const checkToken = (tokenUser: 'admin' | 'employee'): RequestHandler => {
+const checkToken = (userType: UserType.ADMIN | UserType.EMPLOYEE): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token = req.cookies.token as string
+            if (!token || typeof token !== 'string') {
+                return res.render(`${userType}/signin`, { errorMessage: "Please signin" })
+            }
 
-        if (!req.cookies.token)
-            return res.redirect(`/${tokenUser}/signin`)
+            const payload: UserTokenPayload | null = await EmployeeService.decodeToken(token)
+            if (!payload || (payload != null && payload.userType !== userType)) {
+                return res.render(`${userType}/signin`, { errorMessage: "Please signin" })
+            }
 
-        let stringPayload = jwt.verify(req.cookies.token, config.jwt.secret)
-        let payload = JSON.parse(JSON.stringify(stringPayload))
-
-        if (!payload[`${tokenUser}`])
-            return res.redirect(`/${tokenUser}/signin`)
-
-        next()
+            next()
+        } catch (err) {
+            console.log("Error in check token middleware")
+            console.log(err)
+            return res.render(`${userType}/signin`, { errorMessage: "Invalid token. Please signin" })
+        }
     }
 }
 
