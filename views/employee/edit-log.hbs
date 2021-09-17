@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Log - Create Log</title>
+</head>
+<style>
+    .text-danger {
+        color: rgb(250, 59, 59);
+    }
+
+    .text-success {
+        color: rgb(65, 216, 130);
+    }
+</style>
+
+<body>
+    <h1>Edit Log</h1>
+    <form action="/employee/log/{{data.id}}" method="POST">
+        <span>Created on: {{toLocaleDateString data.createdDate}}</span>
+
+        <span class="text-danger">{{errorMessage}}</span><br>
+        <span class="text-success">{{successMessage}}</span><br>
+
+        <input type="text" name="title" id="title" placeholder="title" value="{{data.title}}">
+        <span class="text-danger">{{errors.title}}</span><br>
+
+        <textarea type="textarea" name="description" id="description" placeholder="description"
+            rows="4">{{data.description}}</textarea>
+        <span class="text-danger">{{errors.description}}</span><br>
+
+        <input type="text" name="createdDate" id="date" value="{{toLocaleDateString data.createdDate}}"
+            style="display: none;">
+        <span class="text-danger">{{errors.date}}</span><br>
+
+        <button type="submit">Edit</button>
+    </form>
+</body>
+
+</html>

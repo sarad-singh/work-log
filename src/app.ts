@@ -4,10 +4,12 @@ import morgan from 'morgan';
 import { config } from './config/config'
 import { db } from './database/db';
 import { employeeRouter } from './routes/employee';
+import { registerHbsHelpers } from './config/hbs'
 
 db.checkConnection()
 const app = express()
 app.set('view engine', 'hbs');
+registerHbsHelpers()
 
 app.use(morgan('tiny'))
 app.use(cookieParser())

@@ -8,16 +8,16 @@ const findAll = async (): Promise<Employee[]> => {
     return result
 }
 
-const findOne = async (email: string): Promise<Employee> => {
+const findOne = async (param: { id: number } | { email: string }): Promise<Employee> => {
     const query = "SELECT * FROM  `EMPLOYEE` WHERE ?"
-    const result: Employee[] = await db.query(query, [{ email }])
+    const result: Employee[] = await db.query(query, [param])
     return result[0]
 }
 
 const create = async (employee: CreateEmployee): Promise<boolean> => {
     const query = `INSERT INTO \`EMPLOYEE\` SET ?`
     const result = await db.query(query, [employee])
-    return (result.insertedId) ? true : false
+    return (result.insertId) ? true : false
 }
 
 export const EmployeeModel = {

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Log - Create Log</title>
+</head>
+<style>
+    .text-danger {
+        color: rgb(250, 59, 59);
+    }
+
+    .text-success {
+        color: rgb(65, 216, 130);
+    }
+</style>
+
+<body>
+    <h1>Create Log</h1>
+    <form action="/employee/log" method="POST">
+        <span class="text-danger">{{errorMessage}}</span><br>
+        <span class="text-success">{{successMessage}}</span><br>
+
+        <input type="text" name="title" id="title" placeholder="title" value="{{data.title}}">
+        <span class="text-danger">{{errors.title}}</span><br>
+
+        <textarea type="textarea" name="description" id="description" placeholder="description"
+            rows="4">{{data.description}}</textarea>
+        <span class="text-danger">{{errors.description}}</span><br>
+
+        <input type="date" name="date" id="date" disabled="true">
+        <span class="text-danger">{{errors.date}}</span><br>
+
+
+        <button type="submit">Create</button>
+    </form>
+</body>
+<script>
+    const dateField = document.getElementById('date')
+    dateField.valueAsDate = new Date()
+</script>
+
+</html>

@@ -9,4 +9,13 @@ export enum Department {
     SALES = "Product Sales"
 }
 
-export const Departments = ["Software Engineer", "Software QA Engineer", "Product Management", "Project Management", "UI/UX Design & Graphics", "Digital Marketing", "Customer Support", "Product Sales"]
+export const Departments: Department[] = [
+    Department.SE,
+    Department.QA,
+    Department.PRODUCT_MANAGEMENT,
+    Department.PROJECT_MANAGEMENT,
+    Department.DESIGN,
+    Department.MARKETING,
+    Department.SUPPORT,
+    Department.SALES
+]
