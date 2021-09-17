@@ -14,5 +14,8 @@ router.get('/dashboard',
 router.post('/auth/signin',
     adminValidationMiddleware.signin,
     adminController.signin)
-
+router.get('/auth/logout',
+    authMiddleware.checkToken(UserType.ADMIN),
+    adminController.logout
+)
 export const adminRouter = router

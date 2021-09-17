@@ -27,8 +27,14 @@ const signin: RequestHandler = async (req: Request, res: Response) => {
     }
 }
 
+const logout: RequestHandler = async (req: Request, res: Response) => {
+    res.clearCookie("adminToken")
+    return res.redirect('/admin/signin')
+}
+
 export const adminController = {
     getSignin,
     getDashboard,
-    signin
+    signin,
+    logout
 }
