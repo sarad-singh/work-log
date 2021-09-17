@@ -3,7 +3,25 @@ import { config } from "../config/config";
 import { EmployeeService } from "../services/employee";
 import { LogService } from "../services/log";
 import { CreateEmployee, UserTokenPayload } from "../types/employee";
-import { CreateLog, EditLog } from "../types/log";
+import { CreateLog, EditLog, Log } from "../types/log";
+
+const getSignup: RequestHandler = (req: Request, res: Response) => {
+    return res.render('employee/signup')
+}
+
+const getSignin: RequestHandler = (req: Request, res: Response) => {
+    return res.render('employee/signin')
+}
+
+const getCreateLog: RequestHandler = (req: Request, res: Response) => {
+    return res.render('employee/create-log')
+}
+
+const getEditLog: RequestHandler = async (req: Request, res: Response) => {
+    const logId: number = parseInt(req.params.id)
+    const log: Log = await LogService.findOne(logId)
+    return res.render('employee/edit-log', { data: log })
+}
 
 const signup: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -101,6 +119,10 @@ const editLog: RequestHandler = async (req: Request, res: Response) => {
 }
 
 export const employeeController = {
+    getSignup,
+    getSignin,
+    getCreateLog,
+    getEditLog,
     signin,
     signup,
     logout,

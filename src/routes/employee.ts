@@ -9,24 +9,23 @@ import { Log } from "../types/log";
 
 const router = express.Router()
 
-// page routes
-router.get('/signup', (req: Request, res: Response) => { res.render('employee/signup') })
-router.get('/signin', (req: Request, res: Response) => { res.render('employee/signin') })
-router.get('/dashboard', authMiddleware.checkToken(UserType.EMPLOYEE), employeeController.dashboard)
-router.get('/create-log', authMiddleware.checkToken(UserType.EMPLOYEE), (req: Request, res: Response) => {
-    res.render('employee/create-log')
-})
+router.get('/signup', employeeController.getSignup)
+
+router.get('/signin', employeeController.getSignin)
+
+router.get('/dashboard',
+    authMiddleware.checkToken(UserType.EMPLOYEE),
+    employeeController.dashboard)
+
+router.get('/create-log',
+    authMiddleware.checkToken(UserType.EMPLOYEE),
+    employeeController.getCreateLog)
+
 router.get('/edit-log/:id',
     authMiddleware.checkToken(UserType.EMPLOYEE),
     authMiddleware.authorizeEmployeeForTask,
-    async (req: Request, res: Response) => {
-        const logId: number = parseInt(req.params.id)
-        const log: Log = await LogService.findOne(logId)
-        console.log(log)
-        res.render('employee/edit-log', { data: log })
-    })
+    employeeController.getEditLog)
 
-// server routes
 router.post('/auth/signin',
     employeeValidationMiddleware.signin,
     employeeController.signin)
