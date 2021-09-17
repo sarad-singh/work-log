@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Log - Admin Dashboard</title>
+</head>
+
+<body>
+    <h1>Admin Dashboard</h1>
+    <div><a href="/employee/auth/logout">Logout</a></div>
+
+    <h3>All Logs</h3>
+    <table>
+        <tr>
+            <th>employee</th>
+            <th>title</th>
+            <th>description</th>
+            <th>date</th>
+            <th>edit</th>
+        </tr>
+        {{#each data.logs}}
+        <tr>
+            <td>{{this.employee.name}}</td>
+            <td>{{this.title}}</td>
+            <td>{{this.description}}</td>
+            <td>{{toLocaleDateString this.createdDate}}</td>
+            <td><a href="/employee/edit-log/{{this.id}}">Edit</a></td>
+        </tr>
+        {{/each}}
+
+    </table>
+
+</body>
+<script>
+    { { console } }
+</script>
+
+</html>
