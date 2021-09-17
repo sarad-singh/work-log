@@ -11,7 +11,7 @@ export const config = {
         database: process.env.DB_DATABASE
     },
     jwt: {
-        secret: process.env.JWT_SECRET,
+        secret: process.env.JWT_SECRET || "f9bf78b9a18ce6d46a0cd2b0b86df9da",
         otions: {
             expiresIn: 24 * 60 * 60 * 1000,
             noTimestamp: true,

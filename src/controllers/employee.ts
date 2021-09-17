@@ -2,7 +2,7 @@ import { Request, RequestHandler, Response } from "express";
 import { config } from "../config/config";
 import { EmployeeService } from "../services/employee";
 import { LogService } from "../services/log";
-import { CreateEmployee, UserTokenPayload } from "../types/employee";
+import { CreateEmployee } from "../types/employee";
 import { CreateLog, EditLog, Log } from "../types/log";
 
 const getSignup: RequestHandler = (req: Request, res: Response) => {

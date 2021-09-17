@@ -1,9 +1,18 @@
 import express from "express"
+import { UserType } from "../constansts/userTypes"
 import { adminController } from "../controllers/admin"
+import { authMiddleware } from "../middlewares/auth/auth"
+import { adminValidationMiddleware } from "../middlewares/validations/admin/admin"
 
 const router = express.Router()
 
 router.get('/signin', adminController.getSignin)
-router.get('/dashboard', adminController.getDashboard)
+router.get('/dashboard',
+    authMiddleware.checkToken(UserType.ADMIN),
+    adminController.getDashboard)
+
+router.post('/auth/signin',
+    adminValidationMiddleware.signin,
+    adminController.signin)
 
 export const adminRouter = router

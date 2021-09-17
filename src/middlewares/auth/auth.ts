@@ -2,12 +2,19 @@ import { NextFunction, Request, RequestHandler, Response } from "express"
 import { UserType } from "../../constansts/userTypes"
 import { EmployeeService } from "../../services/employee"
 import { LogService } from "../../services/log"
-import { UserTokenPayload } from "../../types/employee"
+import { Token, UserTokenPayload } from "../../types/types"
 
 const checkToken = (userType: UserType.ADMIN | UserType.EMPLOYEE): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const token = req.cookies.token as string
+            let token: Token
+            if (userType == UserType.EMPLOYEE) {
+                token = req.cookies.token as Token
+            } else if (userType == UserType.ADMIN) {
+                token = req.cookies.adminToken as Token
+            } else {
+                return res.render(`index`, { errorMessage: "Server Error" })
+            }
             if (!token || typeof token !== 'string') {
                 return res.render(`${userType}/signin`, { errorMessage: "Please signin" })
             }

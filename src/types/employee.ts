@@ -26,12 +26,6 @@ export interface SigninEmployeeErros {
     password: string
 }
 
-export interface UserTokenPayload {
-    id: number,
-    email: string
-    userType: 'employee' | 'admin'
-}
-
 export interface CreateEmployee {
     name: string,
     email: string,
@@ -44,7 +38,8 @@ export interface Employee {
     name: string,
     email: string,
     department: string,
-    password: string
+    password: string,
+    isAdmin: boolean
 }
 
 export interface EmployeeDashboardData {
