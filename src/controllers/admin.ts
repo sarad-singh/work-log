@@ -2,15 +2,19 @@ import { RequestHandler } from "express"
 import { Request, Response } from "express"
 import { config } from "../config/config"
 import { AdminService } from "../services/admin"
+import { LogService } from "../services/log"
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
     return res.render('admin/signin')
 }
 
 const getDashboard: RequestHandler = async (req: Request, res: Response) => {
-    const data = await AdminService.getDashboard()
-    console.log(data)
-    return res.render('admin/dashboard', { data })
+    try {
+        const data = await AdminService.getDashboard()
+        return res.render('admin/dashboard', { data })
+    } catch (err) {
+        return res.render('admin/signin', { errorMessage: "Something went wrong." })
+    }
 }
 
 const signin: RequestHandler = async (req: Request, res: Response) => {
@@ -32,9 +36,28 @@ const logout: RequestHandler = async (req: Request, res: Response) => {
     return res.redirect('/admin/signin')
 }
 
+const deleteLog: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id)
+        console.log(id)
+        const result = await LogService.remove(id)
+        const data = await AdminService.getDashboard()
+        console.log(id, result)
+        if (!result) {
+            return res.render('admin/dashboard', { errorMessage: "Failed to delete", data })
+        }
+        return res.render('admin/dashboard', { successMessage: "Log deleted successfully", data })
+    } catch (err) {
+        console.log(err)
+        const data = await AdminService.getDashboard()
+        return res.render('admin/dashboard', { errorMessage: "Server Error", data })
+    }
+}
+
 export const adminController = {
     getSignin,
     getDashboard,
     signin,
-    logout
+    logout,
+    deleteLog
 }

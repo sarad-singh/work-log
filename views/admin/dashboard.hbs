@@ -7,10 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Work Log - Admin Dashboard</title>
 </head>
+<style>
+    .text-danger {
+        color: rgb(250, 59, 59);
+    }
+
+    .text-success {
+        color: rgb(65, 216, 130);
+    }
+</style>
 
 <body>
     <h1>Admin Dashboard</h1>
     <div><a href="/admin/auth/logout">Logout</a></div>
+
+    <span class="text-danger">{{errorMessage}}</span><br>
+    <span class="text-success">{{successMessage}}</span><br>
 
     <h3>All Logs</h3>
     <table>
@@ -27,7 +39,7 @@
             <td>{{this.title}}</td>
             <td>{{this.description}}</td>
             <td>{{toLocaleDateString this.createdDate}}</td>
-            <td><a href="/employee/edit-log/{{this.id}}">del</a></td>
+            <td><a href="/admin/delete/log/{{this.id}}">del</a></td>
         </tr>
         {{/each}}
 

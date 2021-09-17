@@ -68,9 +68,9 @@ const edit = async ({ id, ...updates }: EditLog): Promise<boolean> => {
 }
 
 const remove = async (id: number): Promise<boolean> => {
-    const query = "DELETE * FROM `LOG` WHERE ?"
+    const query = "DELETE FROM `LOG` WHERE ?"
     const result = await db.query(query, [{ id }])
-    return (result.deleteId) ? true : false
+    return (result.affectedRows) ? true : false
 }
 
 
