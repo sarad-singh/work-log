@@ -2,7 +2,7 @@
 ## Daily updates manager
 
 Rather than asking each employee manually about their daily updates. A single platform 
-to centralize every one's daliy taks updates can be beneficial for future and time saving in present. Woklog is this centralized platform to manage employee's daily updates.
+to centralize every one's daliy taks updates can be beneficial for future and time saving in present. Woklog is this centralized platform to manage employee's daily updates .
 
 ## Features
 -   ##### Employee
