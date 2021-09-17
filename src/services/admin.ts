@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken'
 import { config } from '../config/config'
 import { EmployeeModel } from '../models/employee'
+import { AdminDashboardData } from '../types/admin'
 import { Employee } from '../types/employee'
+import { Log } from '../types/log'
 import { Token, UserTokenPayload } from '../types/types'
+import { LogService } from './log'
 
 const signin = async (email: string, password: string): Promise<Token | null> => {
     const user: Employee = await EmployeeModel.findOne({ email })
@@ -28,8 +31,15 @@ const decodeToken = async (token: Token): Promise<UserTokenPayload | null> => {
     return payload
 }
 
+const getDashboard = async (): Promise<AdminDashboardData> => {
+    const param = {}
+    const logs: Log[] = await LogService.findAll()
+    return { logs }
+}
+
 export const AdminService = {
     signin,
+    getDashboard,
     generateToken,
     decodeToken
 }

@@ -8,7 +8,7 @@ const checkToken = (userType: UserType.ADMIN | UserType.EMPLOYEE): RequestHandle
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             let token: Token
-            if (userType == UserType.EMPLOYEE) {
+            if (userType === UserType.EMPLOYEE) {
                 token = req.cookies.token as Token
             } else if (userType == UserType.ADMIN) {
                 token = req.cookies.adminToken as Token

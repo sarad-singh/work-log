@@ -1,3 +1,5 @@
+import { Log } from "./log";
+
 export interface SigninAdmin {
     email: string,
     password: string
@@ -15,4 +17,8 @@ export interface Admin {
     department: string,
     password: string,
     isAdmin: boolean
+}
+
+export interface AdminDashboardData {
+    logs: Log[]
 }

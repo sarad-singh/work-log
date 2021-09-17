@@ -7,8 +7,10 @@ const getSignin: RequestHandler = (req: Request, res: Response) => {
     return res.render('admin/signin')
 }
 
-const getDashboard: RequestHandler = (req: Request, res: Response) => {
-    return res.render('admin/dashboard')
+const getDashboard: RequestHandler = async (req: Request, res: Response) => {
+    const data = await AdminService.getDashboard()
+    console.log(data)
+    return res.render('admin/dashboard', { data })
 }
 
 const signin: RequestHandler = async (req: Request, res: Response) => {

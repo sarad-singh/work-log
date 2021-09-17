@@ -26,3 +26,15 @@ export interface Log {
     createdDate: Date,
     employeeId: number
 }
+
+export interface LogWithEmployee {
+    id: number
+    title: string,
+    description: string,
+    createdDate: Date,
+    employee: {
+        id: number,
+        email: string,
+        name: string
+    }
+}

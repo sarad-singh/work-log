@@ -9,6 +9,10 @@ const find = async (param: { id: number } | { employeeId: number }): Promise<Log
     return LogModel.find(param)
 }
 
+const findAll = async (): Promise<Log[]> => {
+    return LogModel.findAll()
+}
+
 const findOne = async (id: number): Promise<Log> => {
     return LogModel.findOne(id)
 }
@@ -25,6 +29,7 @@ export const LogService = {
     create,
     find,
     findOne,
+    findAll,
     edit,
     remove
 }
