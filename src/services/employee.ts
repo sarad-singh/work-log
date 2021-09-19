@@ -13,9 +13,10 @@ import { CommentService } from "./comment"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne({ email })
-    if (employee && employee.password == password)
-        return employee
-    return null
+    if (!employee || employee.password != password) {
+        return null
+    }
+    return employee
 }
 
 const signup = async (employee: CreateEmployee): Promise<boolean> => {
@@ -41,6 +42,7 @@ const decodeToken = async (token: string): Promise<UserTokenPayload | null> => {
     }
     return payload
 }
+
 
 const getLogs = async (id: number): Promise<Log[]> => {
     return LogService.find({ employeeId: id })

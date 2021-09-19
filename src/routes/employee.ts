@@ -1,7 +1,7 @@
 import express from "express"
 import { UserType } from "../constansts/userTypes"
 import { employeeController } from "../controllers/employee"
-import { authMiddleware } from "../middlewares/auth/auth"
+import { authenticate, authorizeEmployeeForTask } from "../middlewares/auth/auth"
 import { parseParamId } from "../middlewares/parser"
 import { employeeValidationMiddleware } from "../middlewares/validations/employee/employee"
 import { logValidationMiddleware } from "../middlewares/validations/log/log"
@@ -13,27 +13,27 @@ router.get('/signup', employeeController.getSignup)
 router.get('/signin', employeeController.getSignin)
 
 router.get('/dashboard',
-    authMiddleware.checkToken(UserType.EMPLOYEE),
+    authenticate(UserType.EMPLOYEE),
     employeeController.getDashboard)
 
 router.get('/create/log',
-    authMiddleware.checkToken(UserType.EMPLOYEE),
+    authenticate(UserType.EMPLOYEE),
     employeeController.getCreateLog)
 
 router.get('/edit/log/:id',
     parseParamId('id', '/employee/dashboard'),
-    authMiddleware.checkToken(UserType.EMPLOYEE),
-    authMiddleware.authorizeEmployeeForTask,
+    authenticate(UserType.EMPLOYEE),
+    authorizeEmployeeForTask,
     employeeController.getEditLog)
 
 router.get('/view/log/:id',
     parseParamId('id', '/employee/dashboard'),
-    authMiddleware.checkToken(UserType.EMPLOYEE),
-    authMiddleware.authorizeEmployeeForTask,
+    authenticate(UserType.EMPLOYEE),
+    authorizeEmployeeForTask,
     employeeController.getLog)
 
 router.get('/auth/logout',
-    authMiddleware.checkToken(UserType.EMPLOYEE),
+    authenticate(UserType.EMPLOYEE),
     employeeController.logout)
 
 router.post('/auth/signin',
@@ -45,14 +45,14 @@ router.post('/auth/signup',
     employeeController.signup)
 
 router.post('/create/log',
-    authMiddleware.checkToken(UserType.EMPLOYEE),
+    authenticate(UserType.EMPLOYEE),
     logValidationMiddleware.createLog,
     employeeController.createLog)
 
 router.post('/edit/log/:id',
     parseParamId('id', '/employee/dashboard'),
-    authMiddleware.checkToken(UserType.EMPLOYEE),
-    authMiddleware.authorizeEmployeeForTask,
+    authenticate(UserType.EMPLOYEE),
+    authorizeEmployeeForTask,
     logValidationMiddleware.editLog,
     employeeController.editLog
 )

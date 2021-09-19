@@ -100,7 +100,7 @@
         <nav>
             <ul>
                 <li><a href="/employee/dashboard">Logs</a></li>
-                <li><a href="/employee/create-log">Create Log</a></li>
+                <li><a href="/employee/create/log">Create Log</a></li>
                 <li><a href="/employee/auth/logout">Logout</a></li>
             </ul>
         </nav>
@@ -112,7 +112,7 @@
         </div>
         <div class="form-wrapper">
             <h3>Edit Log</h3>
-            <form action="/employee/log/{{data.id}}" method="POST">
+            <form action="/employee/edit/log/{{data.id}}" method="POST">
                 <div class="input-element">
                     <label for="title">Title</label><br>
                     <input type="text" placeholder="title" name='title' value="{{data.title}}">

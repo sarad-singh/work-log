@@ -8,7 +8,7 @@ export const parseParamId = (param: string, redirectRoute: string): RequestHandl
             req.flash(FlashMessage.ERROR, 'Provided resource id not valid')
             return res.redirect(redirectRoute)
         }
-        req.id = id
+        req.resourceId = id
         next()
     }
 }

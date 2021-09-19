@@ -16,6 +16,6 @@ declare module 'express-session' {
 
 declare module 'express' {
     interface Request {
-        id?: number
+        resourceId?: number
     }
 }

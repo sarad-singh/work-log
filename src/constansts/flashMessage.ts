@@ -1,4 +1,4 @@
 export enum FlashMessage {
     ERROR = "errorMessage",
-    SUCCESS = "successMessage",
+    SUCCESS = "successMessage"
 }
