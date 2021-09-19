@@ -1,10 +1,9 @@
-import { Request, RequestHandler, Response } from "express";
-import { config } from "../config/config";
-import { FlashMessage } from "../constansts/flashMessage";
-import { EmployeeService } from "../services/employee";
-import { LogService } from "../services/log";
-import { CreateEmployee } from "../types/employee";
-import { CreateLog, EditLog, Log } from "../types/log";
+import { Request, RequestHandler, Response } from "express"
+import { FlashMessage } from "../constansts/flashMessage"
+import { EmployeeService } from "../services/employee"
+import { LogService } from "../services/log"
+import { CreateEmployee } from "../types/employee"
+import { CreateLog, EditLog, Log } from "../types/log"
 
 const getSignup: RequestHandler = (req: Request, res: Response) => {
     return res.render("employee/signup", {
@@ -14,7 +13,9 @@ const getSignup: RequestHandler = (req: Request, res: Response) => {
 }
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
-    console.log(req.session)
+    if (req.session.employee) {
+        return res.redirect('/employee/dashboard')
+    }
     return res.render("employee/signin", {
         errorMessage: req.flash(FlashMessage.ERROR),
         successMessage: req.flash(FlashMessage.SUCCESS),
@@ -32,10 +33,7 @@ const getEditLog: RequestHandler = async (req: Request, res: Response) => {
     try {
         const logId = req.resourceId as number
         const log: Log = await LogService.findOne(logId)
-        if (!log) {
-            req.flash(FlashMessage.ERROR, "No log with such id")
-            return res.redirect("/employee/dashboard")
-        }
+
         return res.render("employee/edit-log", {
             errorMessage: req.flash(FlashMessage.ERROR),
             successMessage: req.flash(FlashMessage.SUCCESS),
@@ -49,11 +47,8 @@ const getEditLog: RequestHandler = async (req: Request, res: Response) => {
 
 const getDashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const dashboardData = await EmployeeService.getDashboard(req.session.employee!.id)
-        if (!dashboardData) {
-            req.flash(FlashMessage.ERROR, "Something went wrong")
-            return res.redirect("employee/signin")
-        }
+        const employeeId = req.session.employee!.id as number
+        const dashboardData = await EmployeeService.getDashboard(employeeId)
         return res.render("employee/dashboard", {
             errorMessage: req.flash(FlashMessage.ERROR),
             successMessage: req.flash(FlashMessage.SUCCESS),
@@ -67,7 +62,7 @@ const getDashboard: RequestHandler = async (req: Request, res: Response) => {
 
 const getLog: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const logId = req.resourceId as number
+        const logId: number = req.resourceId as number
         const data = await EmployeeService.getLog(logId)
         return res.render("employee/log", {
             errorMessage: req.flash(FlashMessage.ERROR)[0],

@@ -53,7 +53,7 @@ const signin: RequestHandler = (req: Request, res: Response, next: NextFunction)
     next()
 }
 
-export const employeeValidationMiddleware = {
+export const employeeValidation = {
     signup,
     signin
 }

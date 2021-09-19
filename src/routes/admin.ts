@@ -2,7 +2,8 @@ import express from "express"
 import { UserType } from "../constansts/userTypes"
 import { adminController } from "../controllers/admin"
 import { authenticate } from "../middlewares/auth/auth"
-import { adminValidationMiddleware } from "../middlewares/validations/admin/admin"
+import { parseParamId } from "../middlewares/parser"
+import { adminValidation } from "../middlewares/validations/admin/admin"
 
 const router = express.Router()
 
@@ -13,7 +14,7 @@ router.get('/dashboard',
     adminController.getDashboard
 )
 router.post('/auth/signin',
-    adminValidationMiddleware.signin,
+    adminValidation.signin,
     adminController.signin
 )
 router.get('/auth/logout',
@@ -21,14 +22,17 @@ router.get('/auth/logout',
     adminController.logout
 )
 router.get('/view/log/:id',
+    parseParamId('id', '/admin/dashboard'),
     authenticate(UserType.ADMIN),
-    adminController.viewLog
+    adminController.getLog
 )
-router.post('/feedback/log/:id',
+router.post('/comment/log/:id',
+    parseParamId('id', '/admin/dashboard'),
     authenticate(UserType.ADMIN),
     adminController.createComment
 )
 router.get('/delete/log/:id',
+    parseParamId('id', '/admin/dashboard'),
     authenticate(UserType.ADMIN),
     adminController.deleteLog
 )

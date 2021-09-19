@@ -1,10 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { FlashMessage } from "../../constansts/flashMessage"
 import { UserType } from "../../constansts/userTypes"
-import { EmployeeService } from "../../services/employee"
 import { LogService } from "../../services/log"
 import { Log } from "../../types/log"
-import { Token, UserTokenPayload } from "../../types/types"
 
 const authenticate = (userType: UserType.ADMIN | UserType.EMPLOYEE): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -22,7 +20,7 @@ const authenticate = (userType: UserType.ADMIN | UserType.EMPLOYEE): RequestHand
     }
 }
 
-const authorizeEmployeeForTask = async (req: Request, res: Response, next: NextFunction) => {
+const authorizeEmployeeForLog = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const employeeId: number = req.session.employee!.id
         const logId: number = req.resourceId as number
@@ -44,5 +42,5 @@ const authorizeEmployeeForTask = async (req: Request, res: Response, next: NextF
 
 export {
     authenticate,
-    authorizeEmployeeForTask
+    authorizeEmployeeForLog
 }

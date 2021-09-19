@@ -23,15 +23,7 @@ app.use('/employee', employeeRouter)
 app.use('/admin', adminRouter)
 
 app.get('/', (req: Request, res: Response) => {
-    return res.send(req.session.employee)
-})
-
-app.get('/set', (req: Request, res: Response) => {
-    req.session.employee = {
-        id: 1,
-        email: "sasa"
-    }
-    return res.redirect('/')
+    return res.send('index')
 })
 
 app.listen(config.port, () => {

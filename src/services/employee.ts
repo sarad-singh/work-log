@@ -29,21 +29,6 @@ const getDashboard = async (id: number): Promise<EmployeeDashboardData> => {
     return { profile, logs }
 }
 
-const generateToken = async (id: number, email: string): Promise<string> => {
-    const token = jwt.sign({ id, email, userType: 'employee' }, config.jwt.secret, config.jwt.otions)
-    return token
-}
-
-const decodeToken = async (token: string): Promise<UserTokenPayload | null> => {
-    const stringPayload = jwt.verify(token, config.jwt.secret)
-    const payload: UserTokenPayload = JSON.parse(JSON.stringify(stringPayload))
-    if (!payload.id || !payload.email) {
-        return null
-    }
-    return payload
-}
-
-
 const getLogs = async (id: number): Promise<Log[]> => {
     return LogService.find({ employeeId: id })
 }
@@ -79,8 +64,6 @@ export const EmployeeService = {
     signin,
     signup,
     getDashboard,
-    generateToken,
-    decodeToken,
     getLogs,
     getLog,
     createLog,

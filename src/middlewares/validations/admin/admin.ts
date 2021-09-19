@@ -18,6 +18,6 @@ const signin: RequestHandler = (req: Request, res: Response, next: NextFunction)
     next()
 }
 
-export const adminValidationMiddleware = {
+export const adminValidation = {
     signin
 }

@@ -1,9 +1,9 @@
 import express from "express"
 import { UserType } from "../constansts/userTypes"
 import { employeeController } from "../controllers/employee"
-import { authenticate, authorizeEmployeeForTask } from "../middlewares/auth/auth"
+import { authenticate, authorizeEmployeeForLog } from "../middlewares/auth/auth"
 import { parseParamId } from "../middlewares/parser"
-import { employeeValidationMiddleware } from "../middlewares/validations/employee/employee"
+import { employeeValidation } from "../middlewares/validations/employee/employee"
 import { logValidationMiddleware } from "../middlewares/validations/log/log"
 
 const router = express.Router()
@@ -23,13 +23,13 @@ router.get('/create/log',
 router.get('/edit/log/:id',
     parseParamId('id', '/employee/dashboard'),
     authenticate(UserType.EMPLOYEE),
-    authorizeEmployeeForTask,
+    authorizeEmployeeForLog,
     employeeController.getEditLog)
 
 router.get('/view/log/:id',
     parseParamId('id', '/employee/dashboard'),
     authenticate(UserType.EMPLOYEE),
-    authorizeEmployeeForTask,
+    authorizeEmployeeForLog,
     employeeController.getLog)
 
 router.get('/auth/logout',
@@ -37,11 +37,11 @@ router.get('/auth/logout',
     employeeController.logout)
 
 router.post('/auth/signin',
-    employeeValidationMiddleware.signin,
+    employeeValidation.signin,
     employeeController.signin)
 
 router.post('/auth/signup',
-    employeeValidationMiddleware.signup,
+    employeeValidation.signup,
     employeeController.signup)
 
 router.post('/create/log',
@@ -52,7 +52,7 @@ router.post('/create/log',
 router.post('/edit/log/:id',
     parseParamId('id', '/employee/dashboard'),
     authenticate(UserType.EMPLOYEE),
-    authorizeEmployeeForTask,
+    authorizeEmployeeForLog,
     logValidationMiddleware.editLog,
     employeeController.editLog
 )
