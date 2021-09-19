@@ -1,4 +1,4 @@
-import { Log } from "./log";
+import { DetailedLog, Log } from "./log";
 
 export interface SigninAdmin {
     email: string,
@@ -20,5 +20,5 @@ export interface Admin {
 }
 
 export interface AdminDashboardData {
-    logs: Log[]
+    logs: DetailedLog[]
 }

@@ -1,6 +1,7 @@
 import { RequestHandler } from "express"
 import { Request, Response } from "express"
 import { config } from "../config/config"
+import { FlashMessage } from "../constansts/flashMessage"
 import { AdminService } from "../services/admin"
 import { LogService } from "../services/log"
 
@@ -11,9 +12,13 @@ const getSignin: RequestHandler = (req: Request, res: Response) => {
 const getDashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
         const data = await AdminService.getDashboard()
-        return res.render('admin/dashboard', { data })
+        return res.render('admin/dashboard', {
+            errorMessage: req.flash(FlashMessage.ERROR)[0],
+            successMessage: req.flash(FlashMessage.SUCCESS)[0],
+            data
+        })
     } catch (err) {
-        return res.render('admin/signin', { errorMessage: "Something went wrong." })
+        return res.render('admin/dashboard', { errorMessage: "Something went wrong." })
     }
 }
 
@@ -36,21 +41,54 @@ const logout: RequestHandler = async (req: Request, res: Response) => {
     return res.redirect('/admin/signin')
 }
 
+const createComment: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const { comment } = req.body
+        const logId = parseInt(req.params.id)
+        const payload = await AdminService.decodeToken(req.cookies.adminToken)
+        const adminId = payload?.id as number
+        const result = await AdminService.createComment(comment, adminId, logId)
+        if (!result) {
+            req.flash(FlashMessage.ERROR, "Failed to add feedback")
+            return res.redirect(`admin/view/log/${logId}`)
+        }
+        req.flash(FlashMessage.SUCCESS, "Feedback added successfully")
+        return res.redirect(`/admin/view/log/${logId}`)
+    } catch (err) {
+        console.log(err)
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect('/admin/dashboard')
+    }
+}
+
+const viewLog: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const logId = parseInt(req.params.id)
+        const data = await AdminService.viewLog(logId)
+        return res.render('admin/log', {
+            errorMessage: req.flash(FlashMessage.ERROR)[0],
+            successMessage: req.flash(FlashMessage.SUCCESS)[0],
+            data
+        })
+    } catch (err) {
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect('/admin/dashboard')
+    }
+}
+
 const deleteLog: RequestHandler = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id)
-        console.log(id)
         const result = await LogService.remove(id)
-        const data = await AdminService.getDashboard()
-        console.log(id, result)
         if (!result) {
-            return res.render('admin/dashboard', { errorMessage: "Failed to delete", data })
+            req.flash(FlashMessage.ERROR, "Failed to delete")
+            return res.redirect('/admin/dashboard')
         }
-        return res.render('admin/dashboard', { successMessage: "Log deleted successfully", data })
+        req.flash(FlashMessage.SUCCESS, "Deleted successfully")
+        return res.redirect('/admin/dashboard')
     } catch (err) {
-        console.log(err)
-        const data = await AdminService.getDashboard()
-        return res.render('admin/dashboard', { errorMessage: "Server Error", data })
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect('/admin/dashboard')
     }
 }
 
@@ -59,5 +97,7 @@ export const adminController = {
     getDashboard,
     signin,
     logout,
+    createComment,
+    viewLog,
     deleteLog
 }

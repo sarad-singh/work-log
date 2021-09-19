@@ -1,3 +1,5 @@
+import { Comment } from "./comment";
+
 export interface CreateLog {
     title: string,
     description: string,
@@ -27,7 +29,7 @@ export interface Log {
     employeeId: number
 }
 
-export interface LogWithEmployee {
+export interface DetailedLog {
     id: number
     title: string,
     description: string,
@@ -35,6 +37,8 @@ export interface LogWithEmployee {
     employee: {
         id: number,
         email: string,
-        name: string
-    }
+        name: string,
+        department: string
+    },
+    comments: Comment[]
 }

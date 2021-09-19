@@ -57,19 +57,11 @@
 
     .main {
         width: 600px;
+        overflow-y: scroll;
         margin: auto;
         margin-top: 40px;
     }
 
-    .main>.title {
-        font-size: 28px;
-        margin: 24px auto 16px;
-        font-weight: 700;
-    }
-
-    .logs {
-        padding: 0 20px;
-    }
 
     .log {
         margin-top: 16px;
@@ -79,8 +71,9 @@
     }
 
     .log .title {
-        font-size: 18px;
-        font-weight: 600;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
     }
 
     img.icon {
@@ -90,23 +83,32 @@
 
     .date {
         margin: 8px 0px;
+        font-size: 14px;
         display: flex;
         align-items: center;
     }
 
-    .accordion .body {
-        padding-top: 12px;
+    .date img.icon {
+        width: 14px;
+        margin-right: 8px;
     }
 
-    .actions {
-        display: flex;
-        margin-top: 12px;
+    .description {
+        margin-top: 20px;
+        text-align: justify;
     }
 
-    .actions>div {
-        display: flex;
-        justify-content: center;
-        margin-right: 24px;
+    .feedbacks {
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+
+    .feedback {
+        margin-bottom: 20px;
+    }
+
+    .feedback .comment {
+        margin: 4px 0px;
     }
 </style>
 
@@ -116,7 +118,7 @@
         <nav>
             <ul>
                 <li><a href="/employee/dashboard">Logs</a></li>
-                <li><a href="/employee/create-log">Create Log</a></li>
+                <li><a href="/employee/create/log">Create Log</a></li>
                 <li><a href="/employee/auth/logout">Logout</a></li>
             </ul>
         </nav>
@@ -126,28 +128,31 @@
             <div class="feedback error">{{errorMessage}}</div>
             <div class="feedback success">{{successMessage}}</div>
         </div>
-        <div class="title">
-            Daily Logs
-        </div>
-        <div class="logs">
-            {{#each data.logs}}
-            <div class="log">
-                <div class="title">{{this.title}}</div>
-                <div class="date">
-                    <img class="icon" src="https://cdn-icons-png.flaticon.com/128/3884/3884295.png" alt="clock">
-                    <span>{{toLocaleDateString
-                        this.createdDate}}</span>
-                </div>
-                <div class="actions">
-                    <div class="detail-action">
-                        <span><a href="/employee/view/log/{{this.id}}">View Detail</a></span>
+        <div class="log">
+            <div class="title">{{data.log.title}}</div>
+            <div class="date">
+                <img class="icon" src="https://cdn-icons-png.flaticon.com/128/3884/3884295.png" alt="clock">
+                <span>{{toLocaleDateString data.log.createdDate}}</span>
+            </div>
+            <div class="description">
+                {{data.log.description}}
+            </div>
+            <div class="feedbacks-wrapper">
+                <h4>Admin Feedbacks</h4>
+                <div class="feedbacks">
+                    {{#if data.comments}}
+                    {{#each data.comments}}
+                    <div class="feedback">
+                        <div class="commentor">John Wick</div>
+                        <div class="commented-date">2020-09-09</div>
+                        <div class="comment">{{this.comment}}</div>
                     </div>
-                    <div class="detail-action">
-                        <span><a href="/employee/edit-log/{{this.id}}">Edit</a></span>
-                    </div>
+                    {{/each}}
+                    {{else}}
+                    <div>No Feedbacks</div>
+                    {{/if}}
                 </div>
             </div>
-            {{/each}}
         </div>
     </div>
 </body>

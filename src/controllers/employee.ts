@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 import { config } from "../config/config";
+import { FlashMessage } from "../constansts/flashMessage";
 import { EmployeeService } from "../services/employee";
 import { LogService } from "../services/log";
 import { CreateEmployee } from "../types/employee";
@@ -18,9 +19,47 @@ const getCreateLog: RequestHandler = (req: Request, res: Response) => {
 }
 
 const getEditLog: RequestHandler = async (req: Request, res: Response) => {
-    const logId: number = parseInt(req.params.id)
-    const log: Log = await LogService.findOne(logId)
-    return res.render('employee/edit-log', { data: log })
+    try {
+        const logId = req.id as number
+        const log: Log = await LogService.findOne(logId)
+        if (!log) {
+            req.flash(FlashMessage.ERROR, 'No log with such id')
+            return res.render('employee/dashboard')
+        }
+        return res.render('employee/edit-log', { data: log })
+    } catch (err) {
+        req.flash(FlashMessage.ERROR, 'Server error.')
+        return res.render('employee/dashboard')
+    }
+}
+
+const getDashboard: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const token = req.cookies.token
+        const payload = await EmployeeService.decodeToken(token)
+        const dashboardData = await EmployeeService.getDashboard(payload!.id)
+        if (!dashboardData) {
+            return res.render('employee/signin', { errorMessage: "Please signin" })
+        }
+        return res.render('employee/dashboard', { data: dashboardData })
+    } catch (err) {
+        return res.render('employee/signin', { errorMessage: "Server Error" })
+    }
+}
+
+const getLog: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const logId = parseInt(req.params.id)
+        const data = await EmployeeService.getLog(logId)
+        return res.render('employee/log', {
+            errorMessage: req.flash(FlashMessage.ERROR)[0],
+            successMessage: req.flash(FlashMessage.SUCCESS)[0],
+            data
+        })
+    } catch (err) {
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect('/admin/dashboard')
+    }
 }
 
 const signup: RequestHandler = async (req: Request, res: Response) => {
@@ -55,20 +94,6 @@ const signin: RequestHandler = async (req: Request, res: Response) => {
 const logout: RequestHandler = async (req: Request, res: Response) => {
     res.clearCookie("token")
     return res.redirect('/employee/signin')
-}
-
-const dashboard: RequestHandler = async (req: Request, res: Response) => {
-    try {
-        const token = req.cookies.token
-        const payload = await EmployeeService.decodeToken(token)
-        const dashboardData = await EmployeeService.getDashboard(payload!.id)
-        if (!dashboardData) {
-            return res.render('employee/signin', { errorMessage: "Please signin" })
-        }
-        return res.render('employee/dashboard', { data: dashboardData })
-    } catch (err) {
-        return res.render('employee/signin', { errorMessage: "Server Error" })
-    }
 }
 
 const createLog: RequestHandler = async (req: Request, res: Response) => {
@@ -118,15 +143,17 @@ const editLog: RequestHandler = async (req: Request, res: Response) => {
     }
 }
 
+
 export const employeeController = {
-    getSignup,
     getSignin,
+    getSignup,
+    getDashboard,
     getCreateLog,
     getEditLog,
+    getLog,
     signin,
     signup,
     logout,
-    dashboard,
     createLog,
     editLog
 }

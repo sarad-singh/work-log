@@ -5,41 +5,129 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Log - Create Log</title>
+    <title>Worklog - Employee Dashboard</title>
 </head>
 <style>
-    .text-danger {
-        color: rgb(250, 59, 59);
+    body {
+        margin: 0;
+        background-color: #eee;
     }
 
-    .text-success {
-        color: rgb(65, 216, 130);
+    .feedback.error {
+        color: red;
+    }
+
+    .feedback.success {
+        color: green;
+    }
+
+    .header {
+        width: 100%;
+        text-align: center;
+    }
+
+    .header .title {
+        font-size: 48px;
+        margin: 24px auto 16px;
+        font-weight: 800;
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+        padding: 0;
+    }
+
+    nav ul li {
+        list-style: none;
+        padding: none;
+        font-size: 16px;
+        margin: 12px 22px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    nav ul li a:hover {
+        color: seagreen;
+    }
+
+    .main {
+        width: 320px;
+        margin: 40px auto 0px;
+    }
+
+    .form-wrapper {
+        width: 320px;
+        margin: auto;
+        border-radius: 6px;
+        padding: 20px;
+        border: 1px solid #e2e2e2;
+    }
+
+    .input-element {
+        margin-bottom: 16px;
+    }
+
+    .input-element input,
+    .input-element textarea {
+        border: 1px solid rgb(231, 231, 231);
+        margin-bottom: 10px;
+        width: 300px;
+        font-size: 16px;
+        padding: 6px 20px;
+        box-sizing: border-box;
+    }
+
+    button[type=submit] {
+        background-color: #111;
+        border: 0;
+        color: #fff;
+        width: 300px;
+        padding: 12px;
+        font-size: 16px;
+        cursor: pointer;
     }
 </style>
 
 <body>
-    <h1>Create Log</h1>
-    <form action="/employee/log" method="POST">
-        <span class="text-danger">{{errorMessage}}</span><br>
-        <span class="text-success">{{successMessage}}</span><br>
-
-        <input type="text" name="title" id="title" placeholder="title" value="{{data.title}}">
-        <span class="text-danger">{{errors.title}}</span><br>
-
-        <textarea type="textarea" name="description" id="description" placeholder="description"
-            rows="4">{{data.description}}</textarea>
-        <span class="text-danger">{{errors.description}}</span><br>
-
-        <input type="date" name="date" id="date" disabled="true">
-        <span class="text-danger">{{errors.date}}</span><br>
-
-
-        <button type="submit">Create</button>
-    </form>
+    <div class="header">
+        <div class="title">Worklog</div>
+        <nav>
+            <ul>
+                <li><a href="/employee/dashboard">Logs</a></li>
+                <li><a href="/employee/create-log">Create Log</a></li>
+                <li><a href="/employee/auth/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="action-feedbacks">
+            <div class="feedback error">{{errorMessage}}</div>
+            <div class="feedback success">{{successMessage}}</div>
+        </div>
+        <div class="form-wrapper">
+            <h3>Create Today's Log</h3>
+            <form action="/employee/log" method="POST">
+                <div class="input-element">
+                    <label for="title">Title</label><br>
+                    <input type="text" placeholder="title" name='title' value="{{data.title}}">
+                    <div class="feedback error">{{errors.title}}</div>
+                </div>
+                <div class="input-element">
+                    <label for="description">Description</label><br>
+                    <textarea name="description" id="description" rows="4">{{data.description}}</textarea>
+                    <div class="feedback error">{{errors.description}}</div>
+                </div>
+                <button type="submit">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
 </body>
-<script>
-    const dateField = document.getElementById('date')
-    dateField.valueAsDate = new Date()
-</script>
 
 </html>

@@ -5,49 +5,166 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Log - Admin Dashboard</title>
+    <title>Worklog - Admin Dashboard</title>
 </head>
 <style>
-    .text-danger {
-        color: rgb(250, 59, 59);
+    body {
+        margin: 0;
+        background-color: #eee;
     }
 
-    .text-success {
-        color: rgb(65, 216, 130);
+    .feedback.error {
+        color: red;
+    }
+
+    .feedback.success {
+        color: green;
+    }
+
+    .header {
+        width: 100%;
+        text-align: center;
+    }
+
+    .header .title {
+        font-size: 48px;
+        margin: 24px auto 16px;
+        font-weight: 800;
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+        padding: 0;
+    }
+
+    nav ul li {
+        list-style: none;
+        padding: none;
+        font-size: 16px;
+        margin: 12px 22px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    nav ul li a:hover {
+        color: seagreen;
+    }
+
+    .main {
+        width: 600px;
+        height: 800px;
+        overflow-y: scroll;
+        margin: auto;
+        margin-top: 40px;
+    }
+
+    .main>.title {
+        font-size: 28px;
+        margin: 24px auto 16px;
+        font-weight: 700;
+    }
+
+    .logs {
+        padding: 0 20px;
+    }
+
+    .log {
+        margin-top: 16px;
+        padding: 16px;
+        border: 1px solid rgb(224, 224, 224);
+        border-radius: 4px;
+    }
+
+    .employee-name {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    img.icon {
+        width: 18px;
+        margin-right: 10px;
+    }
+
+    .date {
+        margin: 8px 0px;
+        display: flex;
+        align-items: center;
+    }
+
+    .title {
+        font-size: 18px;
+        margin: 18px 0px;
+    }
+
+    .accordion .body {
+        padding-top: 12px;
+    }
+
+    .actions {
+        display: flex;
+        margin-top: 12px;
+    }
+
+    .actions>div {
+        display: flex;
+        justify-content: center;
+        margin-right: 24px;
     }
 </style>
 
 <body>
-    <h1>Admin Dashboard</h1>
-    <div><a href="/admin/auth/logout">Logout</a></div>
-
-    <span class="text-danger">{{errorMessage}}</span><br>
-    <span class="text-success">{{successMessage}}</span><br>
-
-    <h3>All Logs</h3>
-    <table>
-        <tr>
-            <th>employee</th>
-            <th>title</th>
-            <th>description</th>
-            <th>date</th>
-            <th>delete</th>
-        </tr>
-        {{#each data.logs}}
-        <tr>
-            <td>{{this.employee.name}}</td>
-            <td>{{this.title}}</td>
-            <td>{{this.description}}</td>
-            <td>{{toLocaleDateString this.createdDate}}</td>
-            <td><a href="/admin/delete/log/{{this.id}}">del</a></td>
-        </tr>
-        {{/each}}
-
-    </table>
-
+    <div class="header">
+        <div class="title">Worklog</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard">Logs</a></li>
+                <li><a href="">Departments</a></li>
+                <li><a href="">Employees</a></li>
+                <li><a href="/admin/auth/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="action-feedbacks">
+            <div class="feedback error">{{errorMessage}}</div>
+            <div class="feedback success">{{successMessage}}</div>
+        </div>
+        <div class="title">
+            Daily Logs
+        </div>
+        <div class="logs">
+            {{#each data.logs}}
+            <div class="log">
+                <div class="employee-name">{{this.employee.name}} - {{this.employee.department}}</div>
+                <div class="date">
+                    <img class="icon" src="https://cdn-icons-png.flaticon.com/128/3884/3884295.png" alt="clock">
+                    <span>{{toLocaleDateString
+                        this.createdDate}}</span>
+                </div>
+                <div class="title">{{this.title}}</div>
+                <div class="actions">
+                    <div class="detail-action">
+                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1/1755.png" alt="feedback">
+                        <span><a href="/admin/view/log/{{this.id}}">View Detail</a></span>
+                    </div>
+                    <div class="feedback-action">
+                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/855/855555.png" alt="feedback">
+                        <span><a href="/admin/view/log/{{this.id}}">Give Feedback</a></span>
+                    </div>
+                    <div class="delete-action">
+                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" alt="delete">
+                        <span><a href="/admin/delete/log/{{this.id}}">Delete</a></span>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
 </body>
-<script>
-    { { console } }
-</script>
 
 </html>

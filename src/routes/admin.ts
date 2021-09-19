@@ -20,6 +20,14 @@ router.get('/auth/logout',
     authMiddleware.checkToken(UserType.ADMIN),
     adminController.logout
 )
+router.get('/view/log/:id',
+    authMiddleware.checkToken(UserType.ADMIN),
+    adminController.viewLog
+)
+router.post('/feedback/log/:id',
+    authMiddleware.checkToken(UserType.ADMIN),
+    adminController.createComment
+)
 router.get('/delete/log/:id',
     authMiddleware.checkToken(UserType.ADMIN),
     adminController.deleteLog

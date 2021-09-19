@@ -1,11 +1,10 @@
-import express, { Request, Response, Router } from "express";
-import { UserType } from "../constansts/userTypes";
-import { employeeController } from "../controllers/employee";
-import { authMiddleware } from "../middlewares/auth/auth";
-import { employeeValidationMiddleware } from "../middlewares/validations/employee/employee";
-import { logValidationMiddleware } from "../middlewares/validations/log/log";
-import { LogService } from "../services/log";
-import { Log } from "../types/log";
+import express from "express"
+import { UserType } from "../constansts/userTypes"
+import { employeeController } from "../controllers/employee"
+import { authMiddleware } from "../middlewares/auth/auth"
+import { parseParamId } from "../middlewares/parser"
+import { employeeValidationMiddleware } from "../middlewares/validations/employee/employee"
+import { logValidationMiddleware } from "../middlewares/validations/log/log"
 
 const router = express.Router()
 
@@ -15,16 +14,27 @@ router.get('/signin', employeeController.getSignin)
 
 router.get('/dashboard',
     authMiddleware.checkToken(UserType.EMPLOYEE),
-    employeeController.dashboard)
+    employeeController.getDashboard)
 
-router.get('/create-log',
+router.get('/create/log',
     authMiddleware.checkToken(UserType.EMPLOYEE),
     employeeController.getCreateLog)
 
-router.get('/edit-log/:id',
+router.get('/edit/log/:id',
+    parseParamId('id', '/employee/dashboard'),
     authMiddleware.checkToken(UserType.EMPLOYEE),
     authMiddleware.authorizeEmployeeForTask,
     employeeController.getEditLog)
+
+router.get('/view/log/:id',
+    parseParamId('id', '/employee/dashboard'),
+    authMiddleware.checkToken(UserType.EMPLOYEE),
+    authMiddleware.authorizeEmployeeForTask,
+    employeeController.getLog)
+
+router.get('/auth/logout',
+    authMiddleware.checkToken(UserType.EMPLOYEE),
+    employeeController.logout)
 
 router.post('/auth/signin',
     employeeValidationMiddleware.signin,
@@ -34,16 +44,13 @@ router.post('/auth/signup',
     employeeValidationMiddleware.signup,
     employeeController.signup)
 
-router.get('/auth/logout',
-    authMiddleware.checkToken(UserType.EMPLOYEE),
-    employeeController.logout)
-
-router.post('/log',
+router.post('/create/log',
     authMiddleware.checkToken(UserType.EMPLOYEE),
     logValidationMiddleware.createLog,
     employeeController.createLog)
 
-router.post('/log/:id',
+router.post('/edit/log/:id',
+    parseParamId('id', '/employee/dashboard'),
     authMiddleware.checkToken(UserType.EMPLOYEE),
     authMiddleware.authorizeEmployeeForTask,
     logValidationMiddleware.editLog,

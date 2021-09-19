@@ -17,5 +17,10 @@ export const config = {
             noTimestamp: true,
         }
     },
+    session: {
+        secret: 'D4F3C82BEBE5F8CD8AF39291C2A5E',
+        resave: false,
+        saveUninitialized: true
+    },
     cookieAge: 24 * 60 * 60 * 1000
 }

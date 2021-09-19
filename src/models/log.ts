@@ -1,5 +1,6 @@
 import { db } from "../database/db"
-import { CreateLog, EditLog, Log, LogWithEmployee } from "../types/log"
+import { CreateLog, EditLog, Log, DetailedLog } from "../types/log"
+import { CommentModel } from "./comment"
 
 const create = async (createLog: CreateLog): Promise<boolean> => {
     const query = "INSERT INTO `LOG` SET ?"
@@ -14,14 +15,16 @@ const find = async (param: { id: number } | { employeeId: number }): Promise<Log
     return result
 }
 
-const findAll = async (): Promise<LogWithEmployee[]> => {
+const findAll = async (): Promise<DetailedLog[]> => {
     const query = `SELECT 
-     log.id, log.title, log.description, log.createdDate, 
-     employee.id as employeeId,
-     employee.name as employeeName,
-     employee.email as employeeEmail 
-     FROM log 
-     JOIN employee ON log.employeeId = employee.id`
+    log.id, log.title, log.description, log.createdDate, 
+    employee.id as employeeId,
+    employee.name as employeeName,
+    employee.email as employeeEmail,
+    employee.department as employeeDepartment
+    FROM log 
+    JOIN employee ON log.employeeId = employee.id 
+    ORDER BY createdDate DESC`
 
     const result: {
         id: number
@@ -30,29 +33,31 @@ const findAll = async (): Promise<LogWithEmployee[]> => {
         createdDate: Date,
         employeeId: number,
         employeeEmail: string,
-        employeeName: string
+        employeeName: string,
+        employeeDepartment: string
     }[] = await db.query(query, [])
 
-    let formattedResult: LogWithEmployee[] = []
-
-    if (result.length) {
-        result.forEach(log => {
-            const { id, title, description, createdDate } = log
-            const newLog: LogWithEmployee = {
-                id,
-                title,
-                description,
-                createdDate,
-                employee: {
-                    id: log.employeeId,
-                    name: log.employeeName,
-                    email: log.employeeEmail
-                }
-            }
-            formattedResult.push(newLog)
-        });
+    let formatedResult: DetailedLog[] = []
+    for (let i = 0; i < result.length; i++) {
+        const log = result[i]
+        const { id, title, description, createdDate } = log
+        let comments = await CommentModel.find(id)
+        const newLog: DetailedLog = {
+            id,
+            title,
+            description,
+            createdDate,
+            employee: {
+                id: log.employeeId,
+                name: log.employeeName,
+                email: log.employeeEmail,
+                department: log.employeeDepartment
+            },
+            comments
+        }
+        formatedResult.push(newLog)
     }
-    return formattedResult
+    return formatedResult
 }
 
 const findOne = async (id: number): Promise<Log> => {
@@ -72,7 +77,6 @@ const remove = async (id: number): Promise<boolean> => {
     const result = await db.query(query, [{ id }])
     return (result.affectedRows) ? true : false
 }
-
 
 export const LogModel = {
     create,

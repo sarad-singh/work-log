@@ -23,7 +23,6 @@ const checkToken = (userType: UserType.ADMIN | UserType.EMPLOYEE): RequestHandle
             if (!payload || (payload != null && payload.userType !== userType)) {
                 return res.render(`${userType}/signin`, { errorMessage: "Please signin" })
             }
-
             next()
         } catch (err) {
             console.log("Error in check token middleware")

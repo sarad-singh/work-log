@@ -5,8 +5,11 @@ import { EmployeeModel } from "../models/employee"
 import { LogModel } from "../models/log"
 import { CreateEmployee, Employee, EmployeeDashboardData } from "../types/employee"
 import { UserTokenPayload } from "../types/types"
+import { Comment } from "../types/comment"
 import { CreateLog, EditLog, Log } from "../types/log"
 import { LogService } from "./log"
+import { CommentService } from "./comment"
+
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne({ email })
@@ -43,6 +46,15 @@ const getLogs = async (id: number): Promise<Log[]> => {
     return LogService.find({ employeeId: id })
 }
 
+const getLog = async (logId: number): Promise<{ log: Log, comments: Comment[] }> => {
+    const result = await LogService.findOne(logId)
+    const comments = await CommentService.findAll(logId)
+    return {
+        log: result,
+        comments
+    }
+}
+
 const createLog = async (createLog: CreateLog): Promise<boolean> => {
     return LogService.create(createLog)
 }
@@ -68,6 +80,7 @@ export const EmployeeService = {
     generateToken,
     decodeToken,
     getLogs,
+    getLog,
     createLog,
     editLog
 }
