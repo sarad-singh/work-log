@@ -23,7 +23,7 @@ app.use('/employee', employeeRouter)
 app.use('/admin', adminRouter)
 
 app.get('/', (req: Request, res: Response) => {
-    return res.send('index')
+    return res.render('index')
 })
 
 app.listen(config.port, () => {
