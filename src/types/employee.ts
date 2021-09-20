@@ -1,4 +1,4 @@
-import { Log } from "./log";
+import { Log } from "./log"
 
 export interface CreateEmployee {
     name: string,
@@ -6,7 +6,7 @@ export interface CreateEmployee {
     department: string,
     password: string,
     confirmPassword?: string,
-    isAdmin: '0' | '1'
+    isAdmin: "0" | "1"
 }
 
 export interface CreateEmployeeErrors {

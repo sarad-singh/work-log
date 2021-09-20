@@ -1,5 +1,5 @@
-import { Department } from "../constansts/department";
-import { Comment } from "./comment";
+import { Department } from "../constansts/department"
+import { Comment } from "./comment"
 
 export interface CreateLog {
     title: string,
