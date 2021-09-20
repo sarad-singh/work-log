@@ -1,15 +1,7 @@
-import jwt from "jsonwebtoken"
-import { deflateSync } from "zlib"
-import { config } from "../config/config"
 import { EmployeeModel } from "../models/employee"
-import { LogModel } from "../models/log"
 import { CreateEmployee, Employee, EmployeeDashboardData } from "../types/employee"
-import { UserTokenPayload } from "../types/types"
-import { Comment } from "../types/comment"
 import { CreateLog, EditLog, Log } from "../types/log"
 import { LogService } from "./log"
-import { CommentService } from "./comment"
-
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne({ email })
@@ -19,27 +11,26 @@ const signin = async (email: string, password: string): Promise<Employee | null>
     return employee
 }
 
-const signup = async (employee: CreateEmployee): Promise<boolean> => {
+const create = async (employee: CreateEmployee): Promise<boolean> => {
     return EmployeeModel.create(employee)
 }
 
 const getDashboard = async (id: number): Promise<EmployeeDashboardData> => {
-    const profile = await EmployeeModel.findOne({ id })
-    const logs = await EmployeeService.getLogs(id)
-    return { profile, logs }
+    const employee: Promise<Employee> = EmployeeModel.findOne({ id })
+    const logs: Promise<Log[]> = EmployeeService.getLogs(id)
+    const result = await Promise.all([employee, logs])
+    return {
+        profile: result[0],
+        logs: result[1]
+    }
 }
 
 const getLogs = async (id: number): Promise<Log[]> => {
-    return LogService.find({ employeeId: id })
+    return LogService.find({ key: 'employeeId', value: id })
 }
 
-const getLog = async (logId: number): Promise<{ log: Log, comments: Comment[] }> => {
-    const result = await LogService.findOne(logId)
-    const comments = await CommentService.findAll(logId)
-    return {
-        log: result,
-        comments
-    }
+const getLog = async (logId: number): Promise<Log> => {
+    return await LogService.findOne(logId)
 }
 
 const createLog = async (createLog: CreateLog): Promise<boolean> => {
@@ -48,8 +39,8 @@ const createLog = async (createLog: CreateLog): Promise<boolean> => {
 
 const editLog = async (editLog: EditLog): Promise<boolean> => {
     const log: Log = await LogService.findOne(editLog.id)
-    const createdDate = (new Date(log.createdDate))
-    const todayDate = (new Date())
+    const createdDate = new Date(log.createdDate)
+    const todayDate = new Date()
 
     if ((createdDate.getFullYear() != todayDate.getFullYear())
         || (createdDate.getMonth() != todayDate.getMonth())
@@ -62,7 +53,7 @@ const editLog = async (editLog: EditLog): Promise<boolean> => {
 
 export const EmployeeService = {
     signin,
-    signup,
+    create,
     getDashboard,
     getLogs,
     getLog,

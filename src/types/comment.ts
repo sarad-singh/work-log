@@ -2,7 +2,12 @@ export interface Comment {
     id: number,
     comment: string,
     commentedOn: Date,
-    commentedBy: Number
+    commentor: {
+        id: number,
+        email: string,
+        name: string,
+        department: string
+    },
     logId: number
 }
 
@@ -11,6 +16,9 @@ export interface CreateComment {
     commentedOn: Date,
     commentedBy: number,
     logId: number
+}
+export interface CreateCommentErrors {
+    comment: string
 }
 
 export interface EditComment {

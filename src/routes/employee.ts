@@ -4,13 +4,12 @@ import { employeeController } from "../controllers/employee"
 import { authenticate, authorizeEmployeeForLog } from "../middlewares/auth/auth"
 import { parseParamId } from "../middlewares/parser"
 import { employeeValidation } from "../middlewares/validations/employee/employee"
-import { logValidationMiddleware } from "../middlewares/validations/log/log"
+import { logValidation } from "../middlewares/validations/log/log"
 
 const router = express.Router()
 
-router.get('/signup', employeeController.getSignup)
-
-router.get('/signin', employeeController.getSignin)
+router.get('/signin',
+    employeeController.getSignin)
 
 router.get('/dashboard',
     authenticate(UserType.EMPLOYEE),
@@ -40,20 +39,16 @@ router.post('/auth/signin',
     employeeValidation.signin,
     employeeController.signin)
 
-router.post('/auth/signup',
-    employeeValidation.signup,
-    employeeController.signup)
-
 router.post('/create/log',
     authenticate(UserType.EMPLOYEE),
-    logValidationMiddleware.createLog,
+    logValidation.createLog,
     employeeController.createLog)
 
 router.post('/edit/log/:id',
     parseParamId('id', '/employee/dashboard'),
     authenticate(UserType.EMPLOYEE),
     authorizeEmployeeForLog,
-    logValidationMiddleware.editLog,
+    logValidation.editLog,
     employeeController.editLog
 )
 

@@ -10,15 +10,8 @@ export const config = {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE
     },
-    jwt: {
-        secret: process.env.JWT_SECRET || "f9bf78b9a18ce6d46a0cd2b0b86df9da",
-        otions: {
-            expiresIn: 24 * 60 * 60 * 1000,
-            noTimestamp: true,
-        }
-    },
     session: {
-        secret: 'D4F3C82BEBE5F8CD8AF39291C2A5E',
+        secret: process.env.SESSION_SECRET as string,
         resave: false,
         saveUninitialized: true
     },

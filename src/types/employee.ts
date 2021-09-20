@@ -1,19 +1,21 @@
 import { Log } from "./log";
 
-export interface SignupEmployee {
+export interface CreateEmployee {
     name: string,
     email: string,
     department: string,
-    password: string
-    confirmPassword: string
+    password: string,
+    confirmPassword?: string,
+    isAdmin: '0' | '1'
 }
 
-export interface SignupEmployeeErrors {
+export interface CreateEmployeeErrors {
     name: string,
     email: string,
     department: string,
-    password: string
-    confirmPassword: string
+    password: string,
+    confirmPassword: string,
+    isAdmin: string
 }
 
 export interface SigninEmployee {
@@ -26,12 +28,6 @@ export interface SigninEmployeeErros {
     password: string
 }
 
-export interface CreateEmployee {
-    name: string,
-    email: string,
-    department: string,
-    password: string
-}
 
 export interface Employee {
     id: number

@@ -1,8 +1,8 @@
-import { Department } from "../constansts/department";
-import { db } from "../database/db";
-import { CreateEmployee, Employee } from "../types/employee";
+import { db } from "../database/db"
+import { CreateEmployee, Employee } from "../types/employee"
+import { SqlResultObject } from "../types/types"
 
-const findAll = async (): Promise<Employee[]> => {
+const find = async (): Promise<Employee[]> => {
     const query = "SELECT * FROM  `EMPLOYEE`"
     const result: Employee[] = await db.query(query)
     return result
@@ -16,12 +16,12 @@ const findOne = async (param: { id: number } | { email: string }): Promise<Emplo
 
 const create = async (employee: CreateEmployee): Promise<boolean> => {
     const query = `INSERT INTO \`EMPLOYEE\` SET ?`
-    const result = await db.query(query, [employee])
+    const result: SqlResultObject = await db.query(query, [employee])
     return (result.insertId) ? true : false
 }
 
 export const EmployeeModel = {
-    findAll,
+    find,
     findOne,
     create
 }

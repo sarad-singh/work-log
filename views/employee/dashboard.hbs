@@ -129,6 +129,7 @@
         <div class="title">
             Daily Logs
         </div>
+        {{#if data.logs}}
         <div class="logs">
             {{#each data.logs}}
             <div class="log">
@@ -149,6 +150,9 @@
             </div>
             {{/each}}
         </div>
+        {{else}}
+        <div>No Logs</div>
+        {{/if}}
     </div>
 </body>
 

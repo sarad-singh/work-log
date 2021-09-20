@@ -1,52 +1,50 @@
+import { Department } from "../constansts/department"
 import { db } from "../database/db"
-import { CreateLog, EditLog, Log, DetailedLog } from "../types/log"
+import { CreateLog, EditLog, Log } from "../types/log"
+import { SqlResultObject } from "../types/types"
 import { CommentModel } from "./comment"
 
 const create = async (createLog: CreateLog): Promise<boolean> => {
     const query = "INSERT INTO `LOG` SET ?"
     const date = new Date()
-    const result = await db.query(query, [{ ...createLog, createdDate: date }])
+    const result: SqlResultObject = await db.query(query, [{ ...createLog, createdDate: date }])
     return (result.insertId) ? true : false
 }
 
-const find = async (param: { id: number } | { employeeId: number }): Promise<Log[]> => {
-    const query = "SELECT * FROM `LOG` WHERE ?"
-    const result: Log[] = await db.query(query, [param])
-    return result
-}
-
-const findAll = async (): Promise<DetailedLog[]> => {
+const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promise<Log[]> => {
+    let whereClause: string = ''
+    if (param) {
+        whereClause = `WHERE log.${param.key}=${param.value}`
+    }
     const query = `SELECT 
-    log.id, log.title, log.description, log.createdDate, 
-    employee.id as employeeId,
-    employee.name as employeeName,
-    employee.email as employeeEmail,
-    employee.department as employeeDepartment
-    FROM log 
-    JOIN employee ON log.employeeId = employee.id 
+    log.id AS id, log.title, log.description, log.createdDate, log.employeeId, 
+    employee.name AS employeeName,  
+    employee.email AS employeeEmail,
+    employee.department AS employeeDepartment
+    FROM LOG JOIN employee ON employee.id=employeeId 
+    ${whereClause}
     ORDER BY createdDate DESC`
 
     const result: {
-        id: number
+        id: number,
         title: string,
         description: string,
         createdDate: Date,
         employeeId: number,
-        employeeEmail: string,
         employeeName: string,
-        employeeDepartment: string
+        employeeEmail: string,
+        employeeDepartment: Department
     }[] = await db.query(query, [])
 
-    let formatedResult: DetailedLog[] = []
+    let logs: Log[] = []
     for (let i = 0; i < result.length; i++) {
         const log = result[i]
-        const { id, title, description, createdDate } = log
-        let comments = await CommentModel.find(id)
-        const newLog: DetailedLog = {
-            id,
-            title,
-            description,
-            createdDate,
+        let comments = await CommentModel.find(log.id)
+        const newLog: Log = {
+            id: log.id,
+            title: log.title,
+            description: log.description,
+            createdDate: log.createdDate,
             employee: {
                 id: log.employeeId,
                 name: log.employeeName,
@@ -55,34 +53,34 @@ const findAll = async (): Promise<DetailedLog[]> => {
             },
             comments
         }
-        formatedResult.push(newLog)
+        logs.push(newLog)
     }
-    return formatedResult
+    return logs
 }
 
 const findOne = async (id: number): Promise<Log> => {
-    const query = "SELECT * FROM `LOG` WHERE ?"
-    const result: Log[] = await db.query(query, [{ id }])
-    return result[0]
+    const logs = await find({ key: 'id', value: id })
+    return logs[0]
 }
 
 const edit = async ({ id, ...updates }: EditLog): Promise<boolean> => {
     const query = "UPDATE `LOG` SET ? WHERE ?"
-    const result = await db.query(query, [updates, { id }])
+    const result: SqlResultObject = await db.query(query, [updates, { id }])
     return (result.affectedRows) ? true : false
 }
 
 const remove = async (id: number): Promise<boolean> => {
     const query = "DELETE FROM `LOG` WHERE ?"
-    const result = await db.query(query, [{ id }])
-    return (result.affectedRows) ? true : false
+    const removeComments: Promise<boolean> = CommentModel.remove({ logId: id })
+    const removeLog: Promise<SqlResultObject> = db.query(query, [{ id }])
+    const result = await Promise.all([removeComments, removeLog])
+    return (result[1].affectedRows) ? true : false
 }
 
 export const LogModel = {
     create,
     find,
     findOne,
-    findAll,
     edit,
     remove
 }

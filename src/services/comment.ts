@@ -5,7 +5,7 @@ const create = async (createComment: CreateComment): Promise<boolean> => {
     return CommentModel.create(createComment)
 }
 
-const findAll = async (logId: number): Promise<Comment[]> => {
+const find = async (logId: number): Promise<Comment[]> => {
     return CommentModel.find(logId)
 }
 
@@ -18,13 +18,13 @@ const edit = async (editLog: EditComment): Promise<boolean> => {
 }
 
 const remove = async (id: number): Promise<boolean> => {
-    return CommentModel.remove(id)
+    return CommentModel.remove({ id })
 }
 
 export const CommentService = {
     create,
     findOne,
-    findAll,
+    find,
     edit,
     remove
 }

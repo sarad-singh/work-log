@@ -2,7 +2,7 @@ import { Request, RequestHandler, Response } from "express"
 import { FlashMessage } from "../constansts/flashMessage"
 import { EmployeeService } from "../services/employee"
 import { LogService } from "../services/log"
-import { CreateEmployee } from "../types/employee"
+import { CreateEmployee, EmployeeDashboardData } from "../types/employee"
 import { CreateLog, EditLog, Log } from "../types/log"
 
 const getSignup: RequestHandler = (req: Request, res: Response) => {
@@ -48,7 +48,7 @@ const getEditLog: RequestHandler = async (req: Request, res: Response) => {
 const getDashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
         const employeeId = req.session.employee!.id as number
-        const dashboardData = await EmployeeService.getDashboard(employeeId)
+        const dashboardData: EmployeeDashboardData = await EmployeeService.getDashboard(employeeId)
         return res.render("employee/dashboard", {
             errorMessage: req.flash(FlashMessage.ERROR),
             successMessage: req.flash(FlashMessage.SUCCESS),
@@ -63,7 +63,7 @@ const getDashboard: RequestHandler = async (req: Request, res: Response) => {
 const getLog: RequestHandler = async (req: Request, res: Response) => {
     try {
         const logId: number = req.resourceId as number
-        const data = await EmployeeService.getLog(logId)
+        const data: Log = await EmployeeService.getLog(logId)
         return res.render("employee/log", {
             errorMessage: req.flash(FlashMessage.ERROR)[0],
             successMessage: req.flash(FlashMessage.SUCCESS)[0],
@@ -72,20 +72,6 @@ const getLog: RequestHandler = async (req: Request, res: Response) => {
     } catch (err) {
         req.flash(FlashMessage.ERROR, "Server error")
         return res.redirect("/admin/dashboard")
-    }
-}
-
-const signup: RequestHandler = async (req: Request, res: Response) => {
-    try {
-        const { name, email, department, password } = req.body
-        const createEmployee: CreateEmployee = { name, email, department, password }
-        const result = await EmployeeService.signup(createEmployee)
-        if (!result) {
-            return res.render("employee/signup", { errorMessage: "Unable to signup", data: createEmployee })
-        }
-        return res.render("employee/signin", { successMessage: "Signup Successfull. Please login." })
-    } catch (err) {
-        return res.render("employee/signup", { errorMessage: "Server Error.", data: req.body })
     }
 }
 
@@ -135,7 +121,7 @@ const createLog: RequestHandler = async (req: Request, res: Response) => {
 
 const editLog: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const { title, description, createdDate }: { title: string, description: string, createdDate: Date } = req.body
+        const { title, description }: { title: string, description: string } = req.body
         const logId = req.resourceId as number
         const editLog: EditLog = { id: logId, title, description }
         const result = await EmployeeService.editLog(editLog)
@@ -160,7 +146,6 @@ export const employeeController = {
     getEditLog,
     getLog,
     signin,
-    signup,
     logout,
     createLog,
     editLog

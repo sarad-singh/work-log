@@ -1,14 +1,10 @@
-import jwt from 'jsonwebtoken'
-import { config } from '../config/config'
 import { EmployeeModel } from '../models/employee'
 import { AdminDashboardData } from '../types/admin'
 import { CreateComment } from '../types/comment'
 import { Employee } from '../types/employee'
-import { DetailedLog, Log } from '../types/log'
-import { Token, UserTokenPayload } from '../types/types'
-import { Comment } from '../types/comment'
 import { CommentService } from './comment'
 import { LogService } from './log'
+import { Log } from '../types/log'
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const user: Employee = await EmployeeModel.findOne({ email })
@@ -20,17 +16,12 @@ const signin = async (email: string, password: string): Promise<Employee | null>
 
 
 const getDashboard = async (): Promise<AdminDashboardData> => {
-    const logs: DetailedLog[] = await LogService.findAll()
+    const logs: Log[] = await LogService.find()
     return { logs }
 }
 
-const getLog = async (logId: number): Promise<{ log: Log, comments: Comment[] }> => {
-    const result = await LogService.findOne(logId)
-    const comments = await CommentService.findAll(logId)
-    return {
-        log: result,
-        comments
-    }
+const getLog = async (logId: number): Promise<Log> => {
+    return await LogService.findOne(logId)
 }
 
 const createComment = async (comment: string, commentedBy: number, logId: number): Promise<boolean> => {
@@ -40,8 +31,7 @@ const createComment = async (comment: string, commentedBy: number, logId: number
         commentedBy,
         logId
     }
-    const result = await CommentService.create(createComment)
-    return result
+    return await CommentService.create(createComment)
 }
 
 export const AdminService = {

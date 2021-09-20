@@ -40,7 +40,7 @@ const editLog: RequestHandler = async (req: Request, res: Response, next: NextFu
     next()
 }
 
-export const logValidationMiddleware = {
+export const logValidation = {
     createLog,
     editLog
 }

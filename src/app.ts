@@ -11,7 +11,7 @@ import { adminRouter } from './routes/admin'
 
 db.checkConnection()
 const app = express()
-app.set('view engine', 'hbs');
+app.set('view engine', 'hbs')
 registerHbsHelpers()
 
 app.use(morgan('tiny'))

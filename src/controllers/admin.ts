@@ -1,9 +1,12 @@
 import { RequestHandler } from "express"
 import { Request, Response } from "express"
-import { config } from "../config/config"
+import { Department, Departments } from "../constansts/department"
 import { FlashMessage } from "../constansts/flashMessage"
 import { AdminService } from "../services/admin"
+import { EmployeeService } from "../services/employee"
 import { LogService } from "../services/log"
+import { AdminDashboardData } from "../types/admin"
+import { CreateEmployee } from "../types/employee"
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
     if (req.session.admin) {
@@ -17,15 +20,16 @@ const getSignin: RequestHandler = (req: Request, res: Response) => {
 
 const getDashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const data = await AdminService.getDashboard()
+        const data: AdminDashboardData = await AdminService.getDashboard()
         return res.render('admin/dashboard', {
             errorMessage: req.flash(FlashMessage.ERROR)[0],
             successMessage: req.flash(FlashMessage.SUCCESS)[0],
             data
         })
     } catch (err) {
+        console.log(err)
         req.flash(FlashMessage.ERROR, "Server error")
-        return res.redirect("/admin/dashboard")
+        return res.redirect("/admin/signin")
     }
 }
 
@@ -53,6 +57,40 @@ const signin: RequestHandler = async (req: Request, res: Response) => {
 const logout: RequestHandler = async (req: Request, res: Response) => {
     req.session.admin = undefined
     return res.redirect("/admin/signin")
+}
+
+const getCreateEmployee: RequestHandler = async (req: Request, res: Response) => {
+    const departments: Department[] = Departments
+    return res.render("admin/create-employee", {
+        errorMessage: req.flash(FlashMessage.ERROR),
+        successMessage: req.flash(FlashMessage.SUCCESS),
+        data: {
+            departments
+        }
+    })
+}
+
+const createEmployee: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const { name, email, department, password, isAdmin } = req.body
+        const createEmployee: CreateEmployee = { name, email, department, password, isAdmin }
+        const result = await EmployeeService.create(createEmployee)
+        const departments: Department[] = Departments
+        if (!result) {
+            return res.render("admin/create-employee", {
+                errorMessage: "Unable to signup",
+                data: {
+                    employee: req.body,
+                    departments
+                }
+            })
+        }
+        req.flash(FlashMessage.SUCCESS, "Employee created successfully")
+        return res.redirect("/admin/dashboard")
+    } catch (err) {
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect("/admin/dashboard")
+    }
 }
 
 const createComment: RequestHandler = async (req: Request, res: Response) => {
@@ -99,6 +137,7 @@ const deleteLog: RequestHandler = async (req: Request, res: Response) => {
         req.flash(FlashMessage.SUCCESS, "Deleted successfully")
         return res.redirect('/admin/dashboard')
     } catch (err) {
+        console.log(err)
         req.flash(FlashMessage.ERROR, "Server error")
         return res.redirect('/admin/dashboard')
     }
@@ -109,6 +148,8 @@ export const adminController = {
     getDashboard,
     signin,
     logout,
+    getCreateEmployee,
+    createEmployee,
     createComment,
     getLog,
     deleteLog

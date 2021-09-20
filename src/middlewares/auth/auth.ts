@@ -29,7 +29,7 @@ const authorizeEmployeeForLog = async (req: Request, res: Response, next: NextFu
             req.flash(FlashMessage.ERROR, "No such resource")
             return res.redirect("/employee/dashboard")
         }
-        if (log.employeeId !== employeeId) {
+        if (log.employee.id !== employeeId) {
             req.flash(FlashMessage.ERROR, "Not authorized")
             return res.redirect("/employee/dashboard")
         }

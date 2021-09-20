@@ -1,3 +1,4 @@
+import { Department } from "../constansts/department";
 import { Comment } from "./comment";
 
 export interface CreateLog {
@@ -26,19 +27,11 @@ export interface Log {
     title: string,
     description: string,
     createdDate: Date,
-    employeeId: number
-}
-
-export interface DetailedLog {
-    id: number
-    title: string,
-    description: string,
-    createdDate: Date,
     employee: {
         id: number,
-        email: string,
         name: string,
-        department: string
-    },
-    comments: Comment[]
+        email: string,
+        department: Department
+    }
+    comments?: Comment[]
 }

@@ -3,30 +3,39 @@ import { Comment, CreateComment, EditComment } from "../types/comment"
 
 const find = async (logId: number): Promise<Comment[]> => {
     const query = `SELECT 
-    comment.id, comment.comment, comment.commentedOn,
+    comment.id, comment.comment, comment.commentedOn, comment.logId,
     employee.id as commentorId,
     employee.name as  commentorName,
     employee.email as commentorEmail,
     employee.department as commentorDepartment
     FROM comment 
-    JOIN employee ON employee.id = comment.commentedBy where ?`
+    JOIN employee ON employee.id = comment.commentedBy 
+    where ?
+    ORDER BY commentedOn DESC`
 
-    const result: Comment[] = await db.query(query, [{ logId }])
-    return result
+    const result = await db.query(query, [{ logId }])
+    const comments: Comment[] = []
+    result.forEach((element: any) => {
+        const comment: Comment = {
+            id: element.id,
+            comment: element.comment,
+            commentedOn: element.commentedOn,
+            commentor: {
+                id: element.commentorId,
+                email: element.commentorEmail,
+                name: element.commentorName,
+                department: element.commentorDepartment
+            },
+            logId: element.logId
+        }
+        comments.push(comment)
+    });
+    return comments
 }
 
-const findOne = async (id: number): Promise<Comment> => {
-    const query = `SELECT 
-    comment.id, comment.comment, comment.commentedOn,
-    employee.id as commentorId,
-    employee.name as  commentorName,
-    employee.email as commentorEmail,
-    employee.department as commentorDepartment
-    FROM comment 
-    JOIN employee ON employee.id = comment.commentedBy where ?`
-
-    const result: Comment[] = await db.query(query, [{ id }])
-    return result[0]
+const findOne = async (logId: number): Promise<Comment> => {
+    const comments: Comment[] = await find(logId)
+    return comments[0]
 }
 
 const create = async (createLog: CreateComment): Promise<boolean> => {
@@ -42,9 +51,9 @@ const edit = async ({ id, ...updates }: EditComment): Promise<boolean> => {
     return (result.affectedRows) ? true : false
 }
 
-const remove = async (id: number): Promise<boolean> => {
+const remove = async (param: { id: number } | { logId: number }): Promise<boolean> => {
     const query = "DELETE FROM `COMMENT` WHERE ?"
-    const result = await db.query(query, [{ id }])
+    const result = await db.query(query, [param])
     return (result.affectedRows) ? true : false
 }
 
