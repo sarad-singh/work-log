@@ -1,5 +1,6 @@
 import { db } from "../database/db"
 import { Comment, CreateComment, EditComment } from "../types/comment"
+import { SqlResultObject } from "../types/types"
 
 const find = async (logId: number): Promise<Comment[]> => {
     const query = `SELECT 
@@ -13,9 +14,9 @@ const find = async (logId: number): Promise<Comment[]> => {
     where ?
     ORDER BY commentedOn DESC`
 
-    const result = await db.query(query, [{ logId }])
+    const results = await db.query(query, [{ logId }])
     const comments: Comment[] = []
-    result.forEach((element: any) => {
+    results.forEach((element: any) => {
         const comment: Comment = {
             id: element.id,
             comment: element.comment,
@@ -40,20 +41,20 @@ const findOne = async (logId: number): Promise<Comment> => {
 
 const create = async (createLog: CreateComment): Promise<boolean> => {
     const query = "INSERT INTO `COMMENT` SET ?"
-    const result = await db.query(query, [createLog])
+    const result: SqlResultObject = await db.query(query, [createLog])
     return (result.insertId) ? true : false
 }
 
 
 const edit = async ({ id, ...updates }: EditComment): Promise<boolean> => {
     const query = "UPDATE `COMMENT` SET ? WHERE ?"
-    const result = await db.query(query, [updates, { id }])
+    const result: SqlResultObject = await db.query(query, [updates, { id }])
     return (result.affectedRows) ? true : false
 }
 
 const remove = async (param: { id: number } | { logId: number }): Promise<boolean> => {
     const query = "DELETE FROM `COMMENT` WHERE ?"
-    const result = await db.query(query, [param])
+    const result: SqlResultObject = await db.query(query, [param])
     return (result.affectedRows) ? true : false
 }
 

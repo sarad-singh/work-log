@@ -25,7 +25,7 @@ const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promis
     ${whereClause}
     ORDER BY createdDate DESC`
 
-    const result: {
+    const results: {
         id: number,
         title: string,
         description: string,
@@ -37,8 +37,8 @@ const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promis
     }[] = await db.query(query, [])
 
     let logs: Log[] = []
-    for (let i = 0; i < result.length; i++) {
-        const log = result[i]
+    for (let i = 0; i < results.length; i++) {
+        const log = results[i]
         let comments = await CommentModel.find(log.id)
         const newLog: Log = {
             id: log.id,
@@ -59,7 +59,7 @@ const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promis
 }
 
 const findOne = async (id: number): Promise<Log> => {
-    const logs = await find({ key: 'id', value: id })
+    const logs: Log[] = await find({ key: 'id', value: id })
     return logs[0]
 }
 
@@ -71,10 +71,8 @@ const edit = async ({ id, ...updates }: EditLog): Promise<boolean> => {
 
 const remove = async (id: number): Promise<boolean> => {
     const query = "DELETE FROM `LOG` WHERE ?"
-    const removeComments: Promise<boolean> = CommentModel.remove({ logId: id })
-    const removeLog: Promise<SqlResultObject> = db.query(query, [{ id }])
-    const result = await Promise.all([removeComments, removeLog])
-    return (result[1].affectedRows) ? true : false
+    const result: SqlResultObject = await db.query(query, [{ id }])
+    return (result.affectedRows) ? true : false
 }
 
 export const LogModel = {
