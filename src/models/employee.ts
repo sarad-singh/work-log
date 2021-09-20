@@ -15,7 +15,7 @@ const findOne = async (param: { id: number } | { email: string }): Promise<Emplo
 }
 
 const create = async (employee: CreateEmployee): Promise<boolean> => {
-    const query = `INSERT INTO \`EMPLOYEE\` SET ?`
+    const query = "INSERT INTO `EMPLOYEE` SET ?"
     const result: SqlResultObject = await db.query(query, [employee])
     return (result.insertId) ? true : false
 }
