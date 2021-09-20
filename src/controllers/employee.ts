@@ -71,7 +71,7 @@ const getLog: RequestHandler = async (req: Request, res: Response) => {
         })
     } catch (err) {
         req.flash(FlashMessage.ERROR, "Server error")
-        return res.redirect("/admin/dashboard")
+        return res.redirect("/employee/dashboard")
     }
 }
 
