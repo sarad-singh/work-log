@@ -15,5 +15,8 @@ export const config = {
         resave: false,
         saveUninitialized: true
     },
-    cookieAge: 24 * 60 * 60 * 1000
+    cookieAge: 24 * 60 * 60 * 1000,
+    bcrypt: {
+        saltRounds: 10
+    }
 }

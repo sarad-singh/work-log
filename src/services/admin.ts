@@ -1,17 +1,22 @@
-import { EmployeeModel } from '../models/employee'
-import { AdminDashboardData } from '../types/admin'
-import { CreateComment } from '../types/comment'
-import { Employee } from '../types/employee'
-import { CommentService } from './comment'
-import { LogService } from './log'
-import { Log } from '../types/log'
+import { EmployeeModel } from "../models/employee"
+import { AdminDashboardData } from "../types/admin"
+import { CreateComment } from "../types/comment"
+import { Employee } from "../types/employee"
+import { CommentService } from "./comment"
+import { LogService } from "./log"
+import { Log } from "../types/log"
+import bcrypt from "bcrypt"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
-    const user: Employee = await EmployeeModel.findOne({ email })
-    if (!user || user.password !== password || !user.isAdmin) {
+    const employee: Employee = await EmployeeModel.findOne({ email })
+    if (!employee) {
         return null
     }
-    return user
+    const matched = await bcrypt.compare(password, employee.password)
+    if (!matched || !employee.isAdmin) {
+        return null
+    }
+    return employee
 }
 
 

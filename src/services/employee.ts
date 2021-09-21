@@ -2,16 +2,24 @@ import { EmployeeModel } from "../models/employee"
 import { CreateEmployee, Employee, EmployeeDashboardData } from "../types/employee"
 import { CreateLog, EditLog, Log } from "../types/log"
 import { LogService } from "./log"
+import bcrypt from "bcrypt"
+import { config } from "../config/config"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne({ email })
-    if (!employee || employee.password != password) {
+    if (!employee) {
+        return null
+    }
+    const matched = await bcrypt.compare(password, employee.password)
+    if (!matched) {
         return null
     }
     return employee
 }
 
 const create = async (employee: CreateEmployee): Promise<boolean> => {
+    const hashedPassword = await bcrypt.hash(employee.password, config.bcrypt.saltRounds)
+    employee.password = hashedPassword
     return EmployeeModel.create(employee)
 }
 
@@ -42,9 +50,9 @@ const editLog = async (editLog: EditLog): Promise<boolean> => {
     const createdDate = new Date(log.createdDate)
     const todayDate = new Date()
 
-    if ((createdDate.getFullYear() != todayDate.getFullYear())
-        || (createdDate.getMonth() != todayDate.getMonth())
-        || (createdDate.getDay() != todayDate.getDay())
+    if ((createdDate.getFullYear() !== todayDate.getFullYear())
+        || (createdDate.getMonth() !== todayDate.getMonth())
+        || (createdDate.getDay() !== todayDate.getDay())
     ) {
         return false
     }

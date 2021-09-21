@@ -1,6 +1,8 @@
 import { Department } from "../constansts/department"
 import { Employee } from "../types/employee"
 import { db } from "./db"
+import bcrypt from "bcrypt"
+import { config } from "../config/config"
 
 const allQueries = async (): Promise<void> => {
     const employeeTable = `CREATE TABLE employee ( 
@@ -42,7 +44,7 @@ const allQueries = async (): Promise<void> => {
     const admin: Employee = {
         id: 1,
         name: "Super Admin",
-        password: "P@ssw0rd",
+        password: await bcrypt.hash("P@ssw0rd", config.bcrypt.saltRounds),
         email: "superadmin@worklog.com",
         department: Department.PROJECT_MANAGEMENT,
         isAdmin: true
