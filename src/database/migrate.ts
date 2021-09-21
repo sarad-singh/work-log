@@ -43,12 +43,13 @@ const allQueries = async (): Promise<void> => {
 
     const admin: Employee = {
         id: 1,
-        name: "Super Admin",
-        password: await bcrypt.hash("P@ssw0rd", config.bcrypt.saltRounds),
-        email: "superadmin@worklog.com",
+        name: process.env.ADMIN_NAME as string,
+        password: await bcrypt.hash(process.env.ADMIN_PASSWORD as string, config.bcrypt.saltRounds),
+        email: process.env.ADMIN_EMAIL as string,
         department: Department.PROJECT_MANAGEMENT,
         isAdmin: true
     }
+
     await db.query(employeeTable)
     await db.query(logTable)
     await db.query(commentTable)
