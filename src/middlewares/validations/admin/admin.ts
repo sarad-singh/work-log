@@ -6,8 +6,12 @@ import { CreateEmployee, CreateEmployeeErrors } from "../../../types/employee"
 
 const signin: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     const signinAdmin: SigninAdmin = req.body
+    const emailPattern = /^[\w.]+@[a-z]+\.[a-z]{2,3}$/i
     let errors: Partial<SigninAdminErrors> = {}
 
+    if (!emailPattern.test(signinAdmin.email)) {
+        errors.email = "email must be valid email"
+    }
     if (!signinAdmin.email) {
         errors.email = "email is required"
     }
