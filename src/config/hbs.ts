@@ -18,5 +18,5 @@ export const registerHbsHelpers = (): void => {
             capitalized.push(word)
         })
         return capitalized.join(" ")
-    });
+    })
 }

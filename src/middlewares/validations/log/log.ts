@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction, RequestHandler } from "express";
-import { EmployeeService } from "../../../services/employee";
-import { CreateLog, CreateLogErrors, EditLog } from "../../../types/log";
+import { Request, Response, NextFunction, RequestHandler } from "express"
+import { CreateLog, CreateLogErrors, EditLog } from "../../../types/log"
 
 const createLog: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { title, description } = req.body

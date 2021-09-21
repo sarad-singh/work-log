@@ -1,5 +1,5 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import { SigninEmployee, SigninEmployeeErros } from "../../../types/employee";
+import { NextFunction, Request, RequestHandler, Response } from "express"
+import { SigninEmployee, SigninEmployeeErros } from "../../../types/employee"
 
 const signin: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     const signinEmployee: SigninEmployee = req.body

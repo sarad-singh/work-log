@@ -77,7 +77,7 @@ const getLog: RequestHandler = async (req: Request, res: Response) => {
 
 const signin: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const { email, password }: { email: string; password: string } = req.body
+        const { email, password }: { email: string, password: string } = req.body
         const employee = await EmployeeService.signin(email, password)
         if (!employee) {
             return res.render("employee/signin", {

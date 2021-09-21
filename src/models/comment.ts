@@ -30,7 +30,7 @@ const find = async (logId: number): Promise<Comment[]> => {
             logId: element.logId
         }
         comments.push(comment)
-    });
+    })
     return comments
 }
 

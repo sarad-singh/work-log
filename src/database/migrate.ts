@@ -1,6 +1,6 @@
 import { Department } from "../constansts/department"
 import { Employee } from "../types/employee"
-import { db } from "./db";
+import { db } from "./db"
 
 const allQueries = async (): Promise<void> => {
     const employeeTable = `CREATE TABLE employee ( 

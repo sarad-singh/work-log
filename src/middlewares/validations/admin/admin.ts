@@ -1,9 +1,8 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import { Department, Departments } from "../../../constansts/department";
-import { EmployeeModel } from "../../../models/employee";
-import { EmployeeService } from "../../../services/employee";
-import { SigninAdmin, SigninAdminErrors } from "../../../types/admin";
-import { CreateEmployee, CreateEmployeeErrors } from "../../../types/employee";
+import { NextFunction, Request, RequestHandler, Response } from "express"
+import { Department, Departments } from "../../../constansts/department"
+import { EmployeeModel } from "../../../models/employee"
+import { SigninAdmin, SigninAdminErrors } from "../../../types/admin"
+import { CreateEmployee, CreateEmployeeErrors } from "../../../types/employee"
 
 const signin: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     const signinAdmin: SigninAdmin = req.body

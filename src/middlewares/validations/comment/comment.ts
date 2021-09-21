@@ -1,8 +1,6 @@
-import { Request, Response, NextFunction, RequestHandler } from "express";
-import { FlashMessage } from "../../../constansts/flashMessage";
-import { EmployeeService } from "../../../services/employee";
-import { CreateCommentErrors } from "../../../types/comment";
-import { CreateLog, CreateLogErrors, EditLog } from "../../../types/log";
+import { Request, Response, NextFunction, RequestHandler } from "express"
+import { FlashMessage } from "../../../constansts/flashMessage"
+import { CreateCommentErrors } from "../../../types/comment"
 
 const createComment: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { comment }: { comment: string } = req.body
