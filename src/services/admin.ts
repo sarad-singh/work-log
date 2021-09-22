@@ -29,6 +29,13 @@ const getEmployees = async (): Promise<Employee[]> => {
     return await EmployeeModel.find()
 }
 
+const deleteEmployee = async (employeeId: number, loggedAdminId: number): Promise<Boolean> => {
+    if (employeeId === loggedAdminId) {
+        return false
+    }
+    return await EmployeeModel.remove(employeeId)
+}
+
 const getLog = async (logId: number): Promise<Log> => {
     return await LogService.findOne(logId)
 }
@@ -48,5 +55,6 @@ export const AdminService = {
     getDashboard,
     getLog,
     getEmployees,
+    deleteEmployee,
     createComment
 }

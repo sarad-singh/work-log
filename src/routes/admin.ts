@@ -36,6 +36,11 @@ router.get('/view/employees',
     authenticate(UserType.ADMIN),
     adminController.getEmployees)
 
+router.get('/delete/employee/:id',
+    parseParamId('id', '/admin/view/employees'),
+    authenticate(UserType.ADMIN),
+    adminController.deleteEmployee)
+
 router.get('/view/log/:id',
     parseParamId('id', '/admin/dashboard'),
     authenticate(UserType.ADMIN),

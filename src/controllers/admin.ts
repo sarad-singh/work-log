@@ -75,6 +75,24 @@ const getEmployees: RequestHandler = async (req: Request, res: Response) => {
     }
 }
 
+const deleteEmployee: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const employeeId = req.resourceId as number
+        const loggedAdminId = req.session.admin!.id
+        const result = await AdminService.deleteEmployee(employeeId, loggedAdminId)
+        if (!result) {
+            req.flash(FlashMessage.ERROR, "Failed to delete")
+            return res.redirect("/admin/view/employees")
+        }
+        req.flash(FlashMessage.SUCCESS, "Deleted successfully")
+        return res.redirect("/admin/view/employees")
+    } catch (err) {
+        console.log(err)
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect('/admin/dashboard')
+    }
+}
+
 const getCreateEmployee: RequestHandler = async (req: Request, res: Response) => {
     const departments: Department[] = Departments
     return res.render("admin/create-employee", {
@@ -165,6 +183,7 @@ export const adminController = {
     signin,
     logout,
     getEmployees,
+    deleteEmployee,
     getCreateEmployee,
     createEmployee,
     createComment,

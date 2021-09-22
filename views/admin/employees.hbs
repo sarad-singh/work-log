@@ -126,7 +126,7 @@
                 <td>{{capitalize this.name}}</td>
                 <td>{{this.department}}</td>
                 <td>{{#if this.isAdmin}}Yes{{else}}No{{/if}}</td>
-                <th><a href="#">delete</a></th>
+                <th><a href="/admin/delete/employee/{{this.id}}">delete</a></th>
             </tr>
             {{/each}}
         </table>

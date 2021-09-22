@@ -21,8 +21,15 @@ const create = async (employee: CreateEmployee): Promise<boolean> => {
     return (result.insertId) ? true : false
 }
 
+const remove = async (id: number): Promise<boolean> => {
+    const query = "DELETE FROM `EMPLOYEE` WHERE ?"
+    const result: SqlResultObject = await db.query(query, [{ id }])
+    return (result.affectedRows) ? true : false
+}
+
 export const EmployeeModel = {
     find,
     findOne,
-    create
+    create,
+    remove
 }
