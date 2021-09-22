@@ -25,6 +25,10 @@ const getDashboard = async (): Promise<AdminDashboardData> => {
     return { logs }
 }
 
+const getEmployees = async (): Promise<Employee[]> => {
+    return await EmployeeModel.find()
+}
+
 const getLog = async (logId: number): Promise<Log> => {
     return await LogService.findOne(logId)
 }
@@ -43,5 +47,6 @@ export const AdminService = {
     signin,
     getDashboard,
     getLog,
+    getEmployees,
     createComment
 }

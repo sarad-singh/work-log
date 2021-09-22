@@ -6,7 +6,7 @@ import { AdminService } from "../services/admin"
 import { EmployeeService } from "../services/employee"
 import { LogService } from "../services/log"
 import { AdminDashboardData } from "../types/admin"
-import { CreateEmployee } from "../types/employee"
+import { CreateEmployee, Employee } from "../types/employee"
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
     if (req.session.admin) {
@@ -57,6 +57,22 @@ const signin: RequestHandler = async (req: Request, res: Response) => {
 const logout: RequestHandler = async (req: Request, res: Response) => {
     req.session.admin = undefined
     return res.redirect("/admin/signin")
+}
+
+const getEmployees: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const employees: Employee[] = await AdminService.getEmployees()
+        return res.render("admin/employees", {
+            errorMessage: req.flash(FlashMessage.ERROR),
+            successMessage: req.flash(FlashMessage.SUCCESS),
+            data: {
+                employees
+            }
+        })
+    } catch (err) {
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect("/admin/dashboard")
+    }
 }
 
 const getCreateEmployee: RequestHandler = async (req: Request, res: Response) => {
@@ -148,6 +164,7 @@ export const adminController = {
     getDashboard,
     signin,
     logout,
+    getEmployees,
     getCreateEmployee,
     createEmployee,
     createComment,
