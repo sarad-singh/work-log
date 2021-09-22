@@ -11,13 +11,13 @@ const signin: RequestHandler = (req: Request, res: Response, next: NextFunction)
     }
 
     if (!signinEmployee.email) {
-        errors.email = 'email is required'
+        errors.email = "email is required"
     }
     if (!signinEmployee.password) {
-        errors.password = 'password is required'
+        errors.password = "password is required"
     }
     if (Object.keys(errors).length) {
-        return res.render('employee/signin', { data: signinEmployee, errors })
+        return res.render("employee/signin", { data: signinEmployee, errors })
     }
 
     next()

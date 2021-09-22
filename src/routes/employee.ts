@@ -8,44 +8,44 @@ import { logValidation } from "../middlewares/validations/log/log"
 
 const router = express.Router()
 
-router.get('/signin',
+router.get("/signin",
     employeeController.getSignin)
 
-router.get('/dashboard',
+router.get("/dashboard",
     authenticate(UserType.EMPLOYEE),
     employeeController.getDashboard)
 
-router.get('/create/log',
+router.get("/create/log",
     authenticate(UserType.EMPLOYEE),
     employeeController.getCreateLog)
 
-router.get('/edit/log/:id',
-    parseParamId('id', '/employee/dashboard'),
+router.get("/edit/log/:id",
+    parseParamId("id", "/employee/dashboard"),
     authenticate(UserType.EMPLOYEE),
     authorizeEmployeeForLog,
     employeeController.getEditLog)
 
-router.get('/view/log/:id',
-    parseParamId('id', '/employee/dashboard'),
+router.get("/view/log/:id",
+    parseParamId("id", "/employee/dashboard"),
     authenticate(UserType.EMPLOYEE),
     authorizeEmployeeForLog,
     employeeController.getLog)
 
-router.get('/auth/logout',
+router.get("/auth/logout",
     authenticate(UserType.EMPLOYEE),
     employeeController.logout)
 
-router.post('/auth/signin',
+router.post("/auth/signin",
     employeeValidation.signin,
     employeeController.signin)
 
-router.post('/create/log',
+router.post("/create/log",
     authenticate(UserType.EMPLOYEE),
     logValidation.createLog,
     employeeController.createLog)
 
-router.post('/edit/log/:id',
-    parseParamId('id', '/employee/dashboard'),
+router.post("/edit/log/:id",
+    parseParamId("id", "/employee/dashboard"),
     authenticate(UserType.EMPLOYEE),
     authorizeEmployeeForLog,
     logValidation.editLog,

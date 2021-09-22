@@ -8,52 +8,52 @@ import { commentValidation } from "../middlewares/validations/comment/comment"
 
 const router = express.Router()
 
-router.get('/signin',
+router.get("/signin",
     adminController.getSignin)
 
-router.get('/dashboard',
+router.get("/dashboard",
     authenticate(UserType.ADMIN),
     adminController.getDashboard
 )
-router.post('/auth/signin',
+router.post("/auth/signin",
     adminValidation.signin,
     adminController.signin
 )
-router.get('/auth/logout',
+router.get("/auth/logout",
     authenticate(UserType.ADMIN),
     adminController.logout
 )
-router.get('/create/employee',
+router.get("/create/employee",
     authenticate(UserType.ADMIN),
     adminController.getCreateEmployee)
 
-router.post('/create/employee',
+router.post("/create/employee",
     authenticate(UserType.ADMIN),
     adminValidation.createEmployee,
     adminController.createEmployee)
 
-router.get('/view/employees',
+router.get("/view/employees",
     authenticate(UserType.ADMIN),
     adminController.getEmployees)
 
-router.get('/delete/employee/:id',
-    parseParamId('id', '/admin/view/employees'),
+router.get("/delete/employee/:id",
+    parseParamId("id", "/admin/view/employees"),
     authenticate(UserType.ADMIN),
     adminController.deleteEmployee)
 
-router.get('/view/log/:id',
-    parseParamId('id', '/admin/dashboard'),
+router.get("/view/log/:id",
+    parseParamId("id", "/admin/dashboard"),
     authenticate(UserType.ADMIN),
     adminController.getLog
 )
-router.post('/comment/log/:id',
-    parseParamId('id', '/admin/dashboard'),
+router.post("/comment/log/:id",
+    parseParamId("id", "/admin/dashboard"),
     authenticate(UserType.ADMIN),
     commentValidation.createComment,
     adminController.createComment
 )
-router.get('/delete/log/:id',
-    parseParamId('id', '/admin/dashboard'),
+router.get("/delete/log/:id",
+    parseParamId("id", "/admin/dashboard"),
     authenticate(UserType.ADMIN),
     adminController.deleteLog
 )

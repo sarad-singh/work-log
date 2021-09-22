@@ -1,13 +1,13 @@
-import hbs from 'hbs'
+import hbs from "hbs"
 
 export const registerHbsHelpers = (): void => {
-    hbs.registerHelper('toLocaleDateString', (dateString: string): string => {
+    hbs.registerHelper("toLocaleDateString", (dateString: string): string => {
         if (!dateString) {
             return ""
         }
         return (new Date(dateString)).toLocaleString()
     })
-    hbs.registerHelper('capitalize', (string: string): string => {
+    hbs.registerHelper("capitalize", (string: string): string => {
         if (!string) {
             return ""
         }

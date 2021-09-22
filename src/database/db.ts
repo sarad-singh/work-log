@@ -11,10 +11,10 @@ const query = async (query: string, values: any[] = []) => {
 
 const checkConnection: () => void = async () => {
     pool.getConnection().then((connection) => {
-        console.log(`Database Connection: Success`)
+        console.log("Database Connection: Success")
         connection.release()
     }).catch(err => {
-        console.log(`Database Connection: Failure`)
+        console.log("Database Connection: Failure")
         console.log(err)
         process.exit(1)
     })

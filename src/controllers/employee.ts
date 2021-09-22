@@ -2,7 +2,7 @@ import { Request, RequestHandler, Response } from "express"
 import { FlashMessage } from "../constansts/flashMessage"
 import { EmployeeService } from "../services/employee"
 import { LogService } from "../services/log"
-import { CreateEmployee, EmployeeDashboardData } from "../types/employee"
+import { EmployeeDashboardData } from "../types/employee"
 import { CreateLog, EditLog, Log } from "../types/log"
 
 const getSignup: RequestHandler = (req: Request, res: Response) => {
@@ -14,7 +14,7 @@ const getSignup: RequestHandler = (req: Request, res: Response) => {
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
     if (req.session.employee) {
-        return res.redirect('/employee/dashboard')
+        return res.redirect("/employee/dashboard")
     }
     return res.render("employee/signin", {
         errorMessage: req.flash(FlashMessage.ERROR),

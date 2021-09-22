@@ -34,7 +34,7 @@ const getDashboard = async (id: number): Promise<EmployeeDashboardData> => {
 }
 
 const getLogs = async (id: number): Promise<Log[]> => {
-    return LogService.find({ key: 'employeeId', value: id })
+    return LogService.find({ key: "employeeId", value: id })
 }
 
 const getLog = async (logId: number): Promise<Log> => {

@@ -10,7 +10,7 @@ import { CreateEmployee, Employee } from "../types/employee"
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
     if (req.session.admin) {
-        return res.redirect('/admin/dashboard')
+        return res.redirect("/admin/dashboard")
     }
     return res.render("admin/signin", {
         errorMessage: req.flash(FlashMessage.ERROR),
@@ -21,7 +21,7 @@ const getSignin: RequestHandler = (req: Request, res: Response) => {
 const getDashboard: RequestHandler = async (req: Request, res: Response) => {
     try {
         const data: AdminDashboardData = await AdminService.getDashboard()
-        return res.render('admin/dashboard', {
+        return res.render("admin/dashboard", {
             errorMessage: req.flash(FlashMessage.ERROR)[0],
             successMessage: req.flash(FlashMessage.SUCCESS)[0],
             data
@@ -89,7 +89,7 @@ const deleteEmployee: RequestHandler = async (req: Request, res: Response) => {
     } catch (err) {
         console.log(err)
         req.flash(FlashMessage.ERROR, "Server error")
-        return res.redirect('/admin/dashboard')
+        return res.redirect("/admin/dashboard")
     }
 }
 
@@ -141,7 +141,7 @@ const createComment: RequestHandler = async (req: Request, res: Response) => {
         return res.redirect(`/admin/view/log/${logId}`)
     } catch (err) {
         req.flash(FlashMessage.ERROR, "Server error")
-        return res.redirect('/admin/dashboard')
+        return res.redirect("/admin/dashboard")
     }
 }
 
@@ -149,14 +149,14 @@ const getLog: RequestHandler = async (req: Request, res: Response) => {
     try {
         const logId = parseInt(req.params.id)
         const data = await AdminService.getLog(logId)
-        return res.render('admin/log', {
+        return res.render("admin/log", {
             errorMessage: req.flash(FlashMessage.ERROR),
             successMessage: req.flash(FlashMessage.SUCCESS),
             data
         })
     } catch (err) {
         req.flash(FlashMessage.ERROR, "Server error")
-        return res.redirect('/admin/dashboard')
+        return res.redirect("/admin/dashboard")
     }
 }
 
@@ -166,14 +166,14 @@ const deleteLog: RequestHandler = async (req: Request, res: Response) => {
         const result = await LogService.remove(id)
         if (!result) {
             req.flash(FlashMessage.ERROR, "Failed to delete")
-            return res.redirect('/admin/dashboard')
+            return res.redirect("/admin/dashboard")
         }
         req.flash(FlashMessage.SUCCESS, "Deleted successfully")
-        return res.redirect('/admin/dashboard')
+        return res.redirect("/admin/dashboard")
     } catch (err) {
         console.log(err)
         req.flash(FlashMessage.ERROR, "Server error")
-        return res.redirect('/admin/dashboard')
+        return res.redirect("/admin/dashboard")
     }
 }
 

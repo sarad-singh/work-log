@@ -11,8 +11,8 @@ const create = async (createLog: CreateLog): Promise<boolean> => {
     return (result.insertId) ? true : false
 }
 
-const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promise<Log[]> => {
-    let whereClause: string = ''
+const find = async (param?: { key: "id" | "employeeId", value: number }): Promise<Log[]> => {
+    let whereClause: string = ""
     if (param) {
         whereClause = `WHERE log.${param.key}=${param.value}`
     }
@@ -59,7 +59,7 @@ const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promis
 }
 
 const findOne = async (id: number): Promise<Log> => {
-    const logs: Log[] = await find({ key: 'id', value: id })
+    const logs: Log[] = await find({ key: "id", value: id })
     return logs[0]
 }
 
