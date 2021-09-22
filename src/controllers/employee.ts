@@ -1,4 +1,5 @@
 import { Request, RequestHandler, Response } from "express"
+import { Department, Departments } from "../constansts/department"
 import { FlashMessage } from "../constansts/flashMessage"
 import { EmployeeService } from "../services/employee"
 import { LogService } from "../services/log"
@@ -75,6 +76,25 @@ const getLog: RequestHandler = async (req: Request, res: Response) => {
     }
 }
 
+const searchLog: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const employeeId = req.session.employee!.id
+        let logs: Log[] = []
+        if (Object.keys(req.query).length) {
+            logs = await EmployeeService.searchLog(req.query, employeeId)
+        }
+        return res.render("employee/search-log", {
+            errorMessage: req.flash(FlashMessage.ERROR),
+            successMessage: req.flash(FlashMessage.SUCCESS),
+            logs
+        })
+    } catch (err) {
+        console.log(err)
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect("/employee/search/log")
+    }
+}
+
 const signin: RequestHandler = async (req: Request, res: Response) => {
     try {
         const { email, password }: { email: string, password: string } = req.body
@@ -147,6 +167,7 @@ export const employeeController = {
     getLog,
     signin,
     logout,
+    searchLog,
     createLog,
     editLog
 }

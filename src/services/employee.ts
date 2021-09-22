@@ -1,9 +1,10 @@
 import { EmployeeModel } from "../models/employee"
 import { CreateEmployee, Employee, EmployeeDashboardData } from "../types/employee"
-import { CreateLog, EditLog, Log } from "../types/log"
+import { CreateLog, EditLog, EmployeeLogSearchParameter, Log } from "../types/log"
 import { LogService } from "./log"
 import bcrypt from "bcrypt"
 import { config } from "../config/config"
+import { LogModel } from "../models/log"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne({ email })
@@ -45,6 +46,10 @@ const createLog = async (createLog: CreateLog): Promise<boolean> => {
     return LogService.create(createLog)
 }
 
+const searchLog = async (searchParameter: EmployeeLogSearchParameter, employeeId: number): Promise<Log[]> => {
+    return LogModel.search({ ...searchParameter, employeeId })
+}
+
 const editLog = async (editLog: EditLog): Promise<boolean> => {
     const log: Log = await LogService.findOne(editLog.id)
     const createdDate = new Date(log.createdDate)
@@ -65,6 +70,7 @@ export const EmployeeService = {
     getDashboard,
     getLogs,
     getLog,
+    searchLog,
     createLog,
     editLog
 }

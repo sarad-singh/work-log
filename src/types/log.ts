@@ -42,3 +42,8 @@ export interface AdminLogSearchParameter {
     employeeId?: number
     department?: string,
 }
+
+export interface EmployeeLogSearchParameter {
+    tittle?: string,
+    createdDate?: Date,
+}

@@ -39,6 +39,12 @@ router.post("/auth/signin",
     employeeValidation.signin,
     employeeController.signin)
 
+router.get("/search/log",
+    authenticate(UserType.EMPLOYEE),
+    employeeValidation.searchLog,
+    employeeController.searchLog
+)
+
 router.post("/create/log",
     authenticate(UserType.EMPLOYEE),
     logValidation.createLog,
