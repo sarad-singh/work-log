@@ -1,6 +1,6 @@
 import { Department } from "../constansts/department"
 import { db } from "../database/db"
-import { CreateLog, EditLog, Log } from "../types/log"
+import { CreateLog, EditLog, Log, LogSearchParameter } from "../types/log"
 import { SqlResultObject } from "../types/types"
 import { CommentModel } from "./comment"
 
@@ -75,14 +75,7 @@ const remove = async (id: number): Promise<boolean> => {
     return (result.affectedRows) ? true : false
 }
 
-const search = async (searchParameter?: {
-    id?: number,
-    title?: string,
-    createdDate?: Date,
-    employeeName?: string,
-    employeeId?: number
-    department?: string,
-}): Promise<Log[]> => {
+const search = async (searchParameter?: LogSearchParameter): Promise<Log[]> => {
     let whereClause: string = ""
     if (searchParameter) {
         whereClause = " WHERE "

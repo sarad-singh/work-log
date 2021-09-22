@@ -27,21 +27,25 @@ const signin: RequestHandler = (req: Request, res: Response, next: NextFunction)
 const searchLog: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     const searchParameters = ["title", "createdDate"]
     const providedSearchParameters = Object.keys(req.query)
-    let providedEmptySearchParameters = 0
+    let emptySearchParameters = 0
+    let invalidParameter = false
 
     if (providedSearchParameters.length) {
         providedSearchParameters.forEach(key => {
-            const validKey = searchParameters.includes(key)
-            if (!validKey) {
-                req.flash(FlashMessage.ERROR, "Invalid search parameter key provided")
-                return res.redirect("/employee/search/log")
+            const isValidKey = searchParameters.includes(key)
+            if (!isValidKey) {
+                invalidParameter = true
             }
             if (req.query[key] == "") {
-                providedEmptySearchParameters++
+                emptySearchParameters++
             }
         })
     }
-    if (providedEmptySearchParameters === searchParameters.length) {
+    if (invalidParameter) {
+        req.flash(FlashMessage.ERROR, "Invalid search parameter provided")
+        return res.redirect("/employee/search/log")
+    }
+    if (emptySearchParameters === searchParameters.length) {
         req.flash(FlashMessage.ERROR, "Provide atleast one search parameter")
         return res.redirect("/employee/search/log")
     }

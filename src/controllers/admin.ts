@@ -168,7 +168,7 @@ const searchLog: RequestHandler = async (req: Request, res: Response) => {
         const departments: Department[] = Departments
         const employees: Employee[] = await AdminService.getEmployees()
         if (Object.keys(req.query).length) {
-            logs = await LogService.search(req.query)
+            logs = await AdminService.searchLog(req.query)
         }
         return res.render("admin/search-log", {
             errorMessage: req.flash(FlashMessage.ERROR),

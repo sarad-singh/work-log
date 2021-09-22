@@ -1,5 +1,5 @@
 import { LogModel } from "../models/log"
-import { AdminLogSearchParameter, CreateLog, EditLog, Log } from "../types/log"
+import { AdminLogSearchParameter, CreateLog, EditLog, Log, LogSearchParameter } from "../types/log"
 
 const create = async (createLog: CreateLog): Promise<boolean> => {
     return LogModel.create(createLog)
@@ -9,7 +9,7 @@ const find = async (param?: { key: "id" | "employeeId", value: number }): Promis
     return LogModel.find(param)
 }
 
-const search = async (searchParameter: AdminLogSearchParameter): Promise<Log[]> => {
+const search = async (searchParameter: LogSearchParameter): Promise<Log[]> => {
     return LogModel.search(searchParameter)
 }
 
