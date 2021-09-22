@@ -77,6 +77,7 @@
 
     .search-form-wrapper form {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
     }
 
@@ -164,11 +165,11 @@
         <div class="search-form-wrapper">
             <form action="/admin/search/log" method="GET">
                 <div class="input-element">
-                    <label for="title">Log title</label>
+                    <label for="title">Log title</label><br>
                     <input type="text" name="title" id="title" placeholder="title">
                 </div>
                 <div class="input-element">
-                    <label for="department">Employee Department</label>
+                    <label for="department">Employee Department</label><br>
                     <select name="department" id="department">
                         <option value="">Select Department</option>
                         {{#each departments}}
@@ -178,11 +179,11 @@
                     <div class="feedback error">{{errors.department}}</div>
                 </div>
                 <div class="input-element">
-                    <label for="department">Created Date</label>
+                    <label for="department">Created Date</label><br>
                     <input type="date" name="createdDate">
                 </div>
                 <div class="input-element">
-                    <label for="employee">Employee</label>
+                    <label for="employee">Employee</label><br>
                     <select name="employeeId" id="employeeName">
                         <option value="">Select Employee</option>
                         {{#each employees}}
