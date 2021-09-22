@@ -75,6 +75,10 @@ const remove = async (id: number): Promise<boolean> => {
     return (result.affectedRows) ? true : false
 }
 
+const search = async () => {
+
+}
+
 export const LogModel = {
     create,
     find,
