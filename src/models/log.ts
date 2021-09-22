@@ -75,13 +75,83 @@ const remove = async (id: number): Promise<boolean> => {
     return (result.affectedRows) ? true : false
 }
 
-const search = async () => {
+const search = async (searchParameter?: {
+    id?: number,
+    title?: string,
+    createdDate?: Date,
+    employeeName?: string,
+    employeeId?: number
+    department?: string,
+}): Promise<Log[]> => {
+    let whereClause: string = ""
+    if (searchParameter) {
+        whereClause = " WHERE "
+        if (searchParameter.id) {
+            whereClause += `log.id=${searchParameter.id} and `
+        }
+        if (searchParameter.title) {
+            whereClause += `log.title LIKE '%${searchParameter.title}%' and `
+        }
+        if (searchParameter.createdDate) {
+            whereClause += `log.createdDate LIKE '%${searchParameter.createdDate}%' and `
+        }
+        if (searchParameter.employeeName) {
+            whereClause += `employee.name LIKE '%${searchParameter.employeeName}%' and `
+        }
+        if (searchParameter.department) {
+            whereClause += `employee.department LIKE '%${searchParameter.department}%' and `
+        }
+        if (searchParameter.employeeId) {
+            whereClause += `employee.id=${searchParameter.employeeId} and `
+        }
+        whereClause += `log.id>=0`
+    }
+    const query = `SELECT 
+    log.id AS id, log.title, log.description, log.createdDate, log.employeeId, 
+    employee.name AS employeeName,  
+    employee.email AS employeeEmail,
+    employee.department AS employeeDepartment
+    FROM LOG JOIN employee ON employee.id=employeeId 
+    ${whereClause}
+    ORDER BY createdDate DESC`
 
+    const results: {
+        id: number,
+        title: string,
+        description: string,
+        createdDate: Date,
+        employeeId: number,
+        employeeName: string,
+        employeeEmail: string,
+        employeeDepartment: Department
+    }[] = await db.query(query, [])
+
+    let logs: Log[] = []
+    for (let i = 0; i < results.length; i++) {
+        const log = results[i]
+        let comments = await CommentModel.find(log.id)
+        const newLog: Log = {
+            id: log.id,
+            title: log.title,
+            description: log.description,
+            createdDate: log.createdDate,
+            employee: {
+                id: log.employeeId,
+                name: log.employeeName,
+                email: log.employeeEmail,
+                department: log.employeeDepartment
+            },
+            comments
+        }
+        logs.push(newLog)
+    }
+    return logs
 }
 
 export const LogModel = {
     create,
     find,
+    search,
     findOne,
     edit,
     remove

@@ -35,3 +35,10 @@ export interface Log {
     }
     comments?: Comment[]
 }
+
+export interface AdminLogSearchParameter {
+    title?: string,
+    createdDate?: Date,
+    employeeId?: number
+    department?: string,
+}

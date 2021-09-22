@@ -2,11 +2,14 @@ import { RequestHandler } from "express"
 import { Request, Response } from "express"
 import { Department, Departments } from "../constansts/department"
 import { FlashMessage } from "../constansts/flashMessage"
+import { EmployeeModel } from "../models/employee"
+import { LogModel } from "../models/log"
 import { AdminService } from "../services/admin"
 import { EmployeeService } from "../services/employee"
 import { LogService } from "../services/log"
 import { AdminDashboardData } from "../types/admin"
 import { CreateEmployee, Employee } from "../types/employee"
+import { Log } from "../types/log"
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
     if (req.session.admin) {
@@ -27,7 +30,6 @@ const getDashboard: RequestHandler = async (req: Request, res: Response) => {
             data
         })
     } catch (err) {
-        console.log(err)
         req.flash(FlashMessage.ERROR, "Server error")
         return res.redirect("/admin/signin")
     }
@@ -160,6 +162,28 @@ const getLog: RequestHandler = async (req: Request, res: Response) => {
     }
 }
 
+const searchLog: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        let logs: Log[] = []
+        const departments: Department[] = Departments
+        const employees: Employee[] = await AdminService.getEmployees()
+        if (Object.keys(req.query).length) {
+            logs = await LogService.search(req.query)
+        }
+        return res.render("admin/search-log", {
+            errorMessage: req.flash(FlashMessage.ERROR),
+            successMessage: req.flash(FlashMessage.SUCCESS),
+            logs,
+            departments,
+            employees
+        })
+    } catch (err) {
+        console.log(err)
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect("/admin/search/log")
+    }
+}
+
 const deleteLog: RequestHandler = async (req: Request, res: Response) => {
     try {
         const id = req.resourceId as number
@@ -188,5 +212,6 @@ export const adminController = {
     createEmployee,
     createComment,
     getLog,
+    searchLog,
     deleteLog
 }

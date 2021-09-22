@@ -1,5 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { Department, Departments } from "../../../constansts/department"
+import { FlashMessage } from "../../../constansts/flashMessage"
 import { EmployeeModel } from "../../../models/employee"
 import { SigninAdmin, SigninAdminErrors } from "../../../types/admin"
 import { CreateEmployee, CreateEmployeeErrors } from "../../../types/employee"
@@ -78,7 +79,32 @@ const createEmployee: RequestHandler = async (req: Request, res: Response, next:
     next()
 }
 
+const searchLog: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+    const searchParameters = ["title", "department", "createdDate", "employeeId"]
+    const providedSearchParameters = Object.keys(req.query)
+    let providedEmptySearchParameters = 0
+
+    if (providedSearchParameters.length) {
+        providedSearchParameters.forEach(key => {
+            const validKey = searchParameters.includes(key)
+            if (!validKey) {
+                req.flash(FlashMessage.ERROR, "Invalid search parameter key provided")
+                return res.redirect("/admin/search/log")
+            }
+            if (req.query[key] == "") {
+                providedEmptySearchParameters++
+            }
+        })
+    }
+    if (providedEmptySearchParameters === searchParameters.length) {
+        req.flash(FlashMessage.ERROR, "Provide atleast one search parameter")
+        return res.redirect("/admin/search/log")
+    }
+    next()
+}
+
 export const adminValidation = {
     signin,
-    createEmployee
+    createEmployee,
+    searchLog
 }

@@ -46,6 +46,13 @@ router.get("/view/log/:id",
     authenticate(UserType.ADMIN),
     adminController.getLog
 )
+
+router.get("/search/log",
+    authenticate(UserType.ADMIN),
+    adminValidation.searchLog,
+    adminController.searchLog
+)
+
 router.post("/comment/log/:id",
     parseParamId("id", "/admin/dashboard"),
     authenticate(UserType.ADMIN),
