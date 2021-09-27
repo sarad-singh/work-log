@@ -1,7 +1,7 @@
-import mysql from 'mysql2/promise'
-import { config } from '../config/config';
+import mysql from "mysql2/promise"
+import { config } from "../config/config"
 
-const pool = mysql.createPool(config.db);
+const pool = mysql.createPool(config.db)
 
 const query = async (query: string, values: any[] = []) => {
     const [result] = await pool.query(query, values)

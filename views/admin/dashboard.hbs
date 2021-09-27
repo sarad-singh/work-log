@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worklog - Employee Dashboard</title>
+    <title>Worklog - Admin Dashboard</title>
 </head>
 <style>
     body {
@@ -79,8 +79,10 @@
     }
 
     .log .title {
-        font-size: 18px;
-        font-weight: 600;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        padding: 0;
     }
 
     img.icon {
@@ -115,9 +117,9 @@
         <div class="title">Worklog</div>
         <nav>
             <ul>
-                <li><a href="/employee/dashboard">Logs</a></li>
-                <li><a href="/employee/create/log">Create Log</a></li>
-                <li><a href="/employee/auth/logout">Logout</a></li>
+                <li><a href="/admin/dashboard">Logs</a></li>
+                <li><a href="/admin/view/employees">Employees</a></li>
+                <li><a href="/admin/auth/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -127,13 +129,17 @@
             <div class="feedback success">{{successMessage}}</div>
         </div>
         <div class="title">
-            {{capitalize data.profile.name}} - Daily Logs
+            Daily Logs
         </div>
         {{#if data.logs}}
         <div class="logs">
             {{#each data.logs}}
             <div class="log">
                 <div class="title">{{this.title}}</div>
+                <div>
+                    <span class="employee-name">{{this.employee.name}}</span> - <span
+                        class="employee-department">{{this.employee.department}}</span>
+                </div>
                 <div class="date">
                     <img class="icon" src="https://cdn-icons-png.flaticon.com/128/3884/3884295.png" alt="clock">
                     <span>{{toLocaleDateString
@@ -141,18 +147,24 @@
                 </div>
                 <div class="actions">
                     <div class="detail-action">
-                        <span><a href="/employee/view/log/{{this.id}}">View Detail</a></span>
+                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1/1755.png" alt="feedback">
+                        <span><a href="/admin/view/log/{{this.id}}">View Detail</a></span>
                     </div>
-                    <div class="detail-action">
-                        <span><a href="/employee/edit/log/{{this.id}}">Edit</a></span>
+                    <div class="feedback-action">
+                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/855/855555.png" alt="feedback">
+                        <span><a href="/admin/view/log/{{this.id}}">Give Feedback</a></span>
+                    </div>
+                    <div class="delete-action">
+                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" alt="delete">
+                        <span><a href="/admin/delete/log/{{this.id}}">Delete</a></span>
                     </div>
                 </div>
             </div>
             {{/each}}
+            {{else}}
+            <div>No Logs</div>
+            {{/if}}
         </div>
-        {{else}}
-        <div>No Logs</div>
-        {{/if}}
     </div>
 </body>
 

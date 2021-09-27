@@ -10,12 +10,13 @@ export const config = {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE
     },
-    jwt: {
-        secret: process.env.JWT_SECRET,
-        otions: {
-            expiresIn: 24 * 60 * 60 * 1000,
-            noTimestamp: true,
-        }
+    session: {
+        secret: process.env.SESSION_SECRET as string,
+        resave: false,
+        saveUninitialized: true
     },
-    cookieAge: 24 * 60 * 60 * 1000
+    cookieAge: 24 * 60 * 60 * 1000,
+    bcrypt: {
+        saltRounds: 10
+    }
 }

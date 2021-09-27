@@ -1,37 +1,79 @@
+import { Department } from "../constansts/department"
 import { db } from "../database/db"
 import { CreateLog, EditLog, Log } from "../types/log"
+import { SqlResultObject } from "../types/types"
+import { CommentModel } from "./comment"
 
 const create = async (createLog: CreateLog): Promise<boolean> => {
     const query = "INSERT INTO `LOG` SET ?"
     const date = new Date()
-    const result = await db.query(query, [{ ...createLog, createdDate: date }])
+    const result: SqlResultObject = await db.query(query, [{ ...createLog, createdDate: date }])
     return (result.insertId) ? true : false
 }
 
-const find = async (param: { id: number } | { employeeId: number }): Promise<Log[]> => {
-    const query = "SELECT * FROM `LOG` WHERE ?"
-    const result: Log[] = await db.query(query, [param])
-    return result
+const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promise<Log[]> => {
+    let whereClause: string = ''
+    if (param) {
+        whereClause = `WHERE log.${param.key}=${param.value}`
+    }
+    const query = `SELECT 
+    log.id AS id, log.title, log.description, log.createdDate, log.employeeId, 
+    employee.name AS employeeName,  
+    employee.email AS employeeEmail,
+    employee.department AS employeeDepartment
+    FROM LOG JOIN employee ON employee.id=employeeId 
+    ${whereClause}
+    ORDER BY createdDate DESC`
+
+    const results: {
+        id: number,
+        title: string,
+        description: string,
+        createdDate: Date,
+        employeeId: number,
+        employeeName: string,
+        employeeEmail: string,
+        employeeDepartment: Department
+    }[] = await db.query(query, [])
+
+    let logs: Log[] = []
+    for (let i = 0; i < results.length; i++) {
+        const log = results[i]
+        let comments = await CommentModel.find(log.id)
+        const newLog: Log = {
+            id: log.id,
+            title: log.title,
+            description: log.description,
+            createdDate: log.createdDate,
+            employee: {
+                id: log.employeeId,
+                name: log.employeeName,
+                email: log.employeeEmail,
+                department: log.employeeDepartment
+            },
+            comments
+        }
+        logs.push(newLog)
+    }
+    return logs
 }
 
 const findOne = async (id: number): Promise<Log> => {
-    const query = "SELECT * FROM `LOG` WHERE ?"
-    const result: Log[] = await db.query(query, [{ id }])
-    return result[0]
+    const logs: Log[] = await find({ key: 'id', value: id })
+    return logs[0]
 }
 
 const edit = async ({ id, ...updates }: EditLog): Promise<boolean> => {
     const query = "UPDATE `LOG` SET ? WHERE ?"
-    const result = await db.query(query, [updates, { id }])
+    const result: SqlResultObject = await db.query(query, [updates, { id }])
     return (result.affectedRows) ? true : false
 }
 
 const remove = async (id: number): Promise<boolean> => {
-    const query = "DELETE * FROM `LOG` WHERE ?"
-    const result = await db.query(query, [{ id }])
-    return (result.deleteId) ? true : false
+    const query = "DELETE FROM `LOG` WHERE ?"
+    const result: SqlResultObject = await db.query(query, [{ id }])
+    return (result.affectedRows) ? true : false
 }
-
 
 export const LogModel = {
     create,

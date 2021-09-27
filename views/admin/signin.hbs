@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worklog - Employee Signin</title>
+    <title>Worklog - Admin Signin</title>
 </head>
 <style>
     body {
@@ -85,13 +85,13 @@
         </div>
         <div class="right">
             <div class="form">
-                <h1 class="title">Employee Signin</h1>
+                <h1 class="title">Admin Signin</h1>
                 <div class="action-feedbacks">
                     <div class="feedback error">{{errorMessage}}</div>
                     <div class="feedback success">{{successMessage}}</div>
                 </div>
 
-                <form action="/employee/auth/signin" method="POST">
+                <form action="/admin/auth/signin" method="POST">
                     <div class="input-element">
                         <input type="email" placeholder="email" name='email' value="{{data.email}}">
                         <div class="feedback error">{{errors.email}}</div>
@@ -105,7 +105,7 @@
                     </button>
                 </form>
                 <div class="form-footer-guide">
-                    <div>Goto, Admin <a href="/admin/signin">Signin</a> Portal</div>
+                    <div>Not an admin!!!. Here's Employee <a href="/employee/signin">Signin</a> Portal</div>
                 </div>
             </div>
         </div>

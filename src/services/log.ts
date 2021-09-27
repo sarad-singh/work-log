@@ -5,7 +5,7 @@ const create = async (createLog: CreateLog): Promise<boolean> => {
     return LogModel.create(createLog)
 }
 
-const find = async (param: { id: number } | { employeeId: number }): Promise<Log[]> => {
+const find = async (param?: { key: 'id' | 'employeeId', value: number }): Promise<Log[]> => {
     return LogModel.find(param)
 }
 

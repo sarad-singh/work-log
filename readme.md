@@ -29,7 +29,7 @@ Technologies used to create this application
 - [Handlebars]
 
 Other Dependencies
-[hbs], [jsonwebtoken], [cookieparser], [morgan]
+[hbs], [express-sessions], [cookie-parser], [morgan]
 
 ## Installation
 
@@ -45,10 +45,15 @@ After installing node
 3. install all dependencies and devDependencies
     ```npm install```
 4. compile typescript src into javascript
-    ```npm start build ```
-5. create mysql database
+    ```npm run build ```
+5. create database in mysql named 'worklog' or any
 6. create .env file and add environment variables following .env.example file
-7. start app 
+7. migrate all tables into database and sample superadmin by running 
+    ```npm run migrate```.
+    Inserted superadmin: 
+    email: superadmin@worklog.com
+    password: P@ssw0rd
+8. start app 
     ``` npm run start  ```
 
    [node.js]: <http://nodejs.org>
@@ -57,7 +62,7 @@ After installing node
    [mySql]: https://www.mysql.com/
    [hbs]: https://www.npmjs.com/package/hbs
    [mysql2]: https://www.npmjs.com/package/mysql2
-   [jsonwebtoken]: https://www.npmjs.com/package/jsonwebtoken
-   [cookieparser]: https://www.npmjs.com/package/cookieparser
+   [express-sessions]: https://www.npmjs.com/package/expresssessions
+   [cookie-parser]: https://www.npmjs.com/package/cookieparser
    [morgan]: https://www.npmjs.com/package/morgan
    [handlebars]: https://handlebarsjs.com/

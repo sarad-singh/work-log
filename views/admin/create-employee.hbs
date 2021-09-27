@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worklog - Admin Dashboard</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        background-color: #eee;
+    }
+
+    .feedback.error {
+        color: red;
+    }
+
+    .feedback.success {
+        color: green;
+    }
+
+    .header {
+        width: 100%;
+        text-align: center;
+    }
+
+    .header .title {
+        font-size: 48px;
+        margin: 24px auto 16px;
+        font-weight: 800;
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+        padding: 0;
+    }
+
+    nav ul li {
+        list-style: none;
+        padding: none;
+        font-size: 16px;
+        margin: 12px 22px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    nav ul li a:hover {
+        color: seagreen;
+    }
+
+    .main {
+        width: 320px;
+        margin: 40px auto 0px;
+    }
+
+    .form-wrapper {
+        width: 320px;
+        margin: auto;
+        border-radius: 6px;
+        padding: 20px;
+        border: 1px solid #e2e2e2;
+    }
+
+    .input-element {
+        margin-bottom: 16px;
+    }
+
+    .input-element input[type=text],
+    .input-element input[type=email],
+    .input-element input[type=password],
+    .input-element textarea,
+    .input-element select {
+        border: 1px solid rgb(231, 231, 231);
+        margin-bottom: 10px;
+        width: 300px;
+        font-size: 16px;
+        padding: 6px 20px;
+        box-sizing: border-box;
+    }
+
+    button[type=submit] {
+        background-color: #111;
+        border: 0;
+        color: #fff;
+        width: 300px;
+        padding: 12px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <div class="title">Worklog</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard">Logs</a></li>
+                <li><a href="/admin/view/employees">Employees</a></li>
+                <li><a href="/admin/auth/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="action-feedbacks">
+            <div class="feedback error">{{errorMessage}}</div>
+            <div class="feedback success">{{successMessage}}</div>
+        </div>
+        <div class="form-wrapper">
+            <h3>Create New Employee</h3>
+            <form action="/admin/create/employee" method="POST">
+                <div class="input-element">
+                    <label for="name">Name</label><br>
+                    <input type="text" placeholder="name" name='name' value="{{data.employee.name}}">
+                    <div class="feedback error">{{errors.name}}</div>
+                </div>
+                <div class="input-element">
+                    <label for="email">Email</label><br>
+                    <input type="text" placeholder="email" name='email' value="{{data.employee.email}}">
+                    <div class="feedback error">{{errors.email}}</div>
+                </div>
+                <div class="input-element">
+                    <label for="department">Department</label><br>
+                    <select name="department" id="department">
+                        {{#each data.departments}}
+                        <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                    </select>
+                    <div class="feedback error">{{errors.department}}</div>
+                </div>
+                <div class="input-element">
+                    <label for="">Is admin</label>
+                    <div>
+                        <label for="isAdmin">Yes</label>
+                        <input type="radio" name="isAdmin" id="isAdmin" value=1>
+                        <label for="isNotAdmin">No</label>
+                        <input type="radio" name="isAdmin" id="isNotAdmin" value=0 checked>
+                    </div>
+                    <div class="feedback error">{{errors.isAdmin}}</div>
+
+                </div>
+                <div class="input-element">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" placeholder="password"
+                        value={{data.employee.password}}>
+                    <div class="feedback error">{{errors.password}}</div>
+                </div>
+                <div class="input-element">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" name="confirmPassword" id="password" placeholder="password"
+                        value={{data.employee.confirmPassword}}>
+                    <div class="feedback error">{{errors.confirmPassword}}</div>
+                </div>
+
+                <button type="submit">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
