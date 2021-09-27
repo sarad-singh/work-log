@@ -1,12 +1,9 @@
-import { Request, Response, NextFunction, RequestHandler } from "express";
-import { EmployeeService } from "../../../services/employee";
-import { CreateLog, CreateLogErrors, EditLog } from "../../../types/log";
+import { Request, Response, NextFunction, RequestHandler } from "express"
+import { CreateLog, CreateLogErrors, EditLog } from "../../../types/log"
 
 const createLog: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { title, description } = req.body
-    const token = req.cookies.token
-    const payload = await EmployeeService.decodeToken(token)
-    const employeeId = payload?.id as number
+    const employeeId: number = req.session.employee!.id
     const log: CreateLog = { title, description, employeeId }
     let errors: Partial<CreateLogErrors> = {}
 
@@ -25,7 +22,7 @@ const createLog: RequestHandler = async (req: Request, res: Response, next: Next
 
 const editLog: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { title, description } = req.body
-    const id = parseInt(req.params.id)
+    const id = req.resourceId as number
     const log: EditLog = { id, title, description }
     let errors: Partial<CreateLogErrors> = {}
 
@@ -36,13 +33,13 @@ const editLog: RequestHandler = async (req: Request, res: Response, next: NextFu
         errors.description = "Description is required"
     }
     if (Object.keys(errors).length) {
-        return res.render(`employee/edit-log/${id}`, { data: req.body, errorMessage: "Error with validation", errors })
+        return res.render(`employee/edit-log`, { data: req.body, errorMessage: "Error with validation", errors })
     }
 
     next()
 }
 
-export const logValidationMiddleware = {
+export const logValidation = {
     createLog,
     editLog
 }

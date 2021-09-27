@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worklog - Admin Dashboard</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        background-color: #eee;
+    }
+
+    .feedback.error {
+        color: red;
+    }
+
+    .feedback.success {
+        color: green;
+    }
+
+    .header {
+        width: 100%;
+        text-align: center;
+    }
+
+    .header .title {
+        font-size: 48px;
+        margin: 24px auto 16px;
+        font-weight: 800;
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+        padding: 0;
+    }
+
+    nav ul li {
+        list-style: none;
+        padding: none;
+        font-size: 16px;
+        margin: 12px 22px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    nav ul li a:hover {
+        color: seagreen;
+    }
+
+    .main {
+        width: 600px;
+        margin: auto;
+        margin-top: 40px;
+    }
+
+    .main>.title {
+        font-size: 28px;
+        margin: 24px auto 16px;
+        font-weight: 700;
+    }
+
+    table {
+        text-align: left;
+    }
+
+    table th {
+        width: 200px;
+        padding: 8px 0;
+    }
+
+    a.btn {
+        display: block;
+        background-color: #111;
+        border: 0;
+        color: #fff;
+        padding: 12px 20px;
+        cursor: pointer;
+        margin: 16px 0;
+        width: 160px;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <div class="title">Worklog</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/search/log">Search Logs</a></li>
+                <li><a href="/admin/dashboard">Logs</a></li>
+                <li><a href="/admin/view/employees">Employees</a></li>
+                <li><a href="/admin/auth/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="action-feedbacks">
+            <div class="feedback error">{{errorMessage}}</div>
+            <div class="feedback success">{{successMessage}}</div>
+        </div>
+        <div class="title">
+            All Employees
+        </div>
+        <a class="btn" href="/admin/create/employee">
+            Create New Employee
+        </a>
+        {{#if data.employees}}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>isAdmin</th>
+                <th>Delete</th>
+            </tr>
+            {{#each data.employees}}
+            <tr>
+                <td>{{capitalize this.name}}</td>
+                <td>{{this.department}}</td>
+                <td>{{#if this.isAdmin}}Yes{{else}}No{{/if}}</td>
+                <th><a href="/admin/delete/employee/{{this.id}}">delete</a></th>
+            </tr>
+            {{/each}}
+        </table>
+        {{else}}
+        <div>No Employees</div>
+        {{/if}}
+    </div>
+</body>
+
+</html>

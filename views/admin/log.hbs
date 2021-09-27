@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worklog - Admin Dashboard</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        background-color: #eee;
+    }
+
+    .feedback.error {
+        color: red;
+    }
+
+    .feedback.success {
+        color: green;
+    }
+
+    .header {
+        width: 100%;
+        text-align: center;
+    }
+
+    .header .title {
+        font-size: 48px;
+        margin: 24px auto 16px;
+        font-weight: 800;
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+        padding: 0;
+    }
+
+    nav ul li {
+        list-style: none;
+        padding: none;
+        font-size: 16px;
+        margin: 12px 22px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    nav ul li a:hover {
+        color: seagreen;
+    }
+
+    .main {
+        width: 600px;
+        overflow-y: scroll;
+        margin: auto;
+        margin-top: 40px;
+    }
+
+
+    .log {
+        margin-top: 16px;
+        padding: 16px;
+        border: 1px solid rgb(224, 224, 224);
+        border-radius: 4px;
+    }
+
+    .log .title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    img.icon {
+        width: 18px;
+        margin-right: 10px;
+    }
+
+    .date {
+        margin: 8px 0px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+    }
+
+    .date img.icon {
+        width: 14px;
+        margin-right: 8px;
+    }
+
+    .description {
+        margin-top: 20px;
+        text-align: justify;
+    }
+
+    .feedbacks {
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+
+    .feedback {
+        margin-bottom: 20px;
+    }
+
+    .feedback .comment {
+        margin: 4px 0px;
+    }
+
+    .feedback-form {
+        margin-top: 20px;
+    }
+
+    .feedback .commented-date {
+        font-size: 14px;
+        margin: 2px 0;
+    }
+
+    .feedback-form textarea {
+        width: 100%;
+    }
+
+    .feedback-form button[type=submit] {
+        background-color: #111;
+        border: 0;
+        color: #fff;
+        padding: 6px 14px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <div class="title">Worklog</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/search/log">Search Logs</a></li>
+                <li><a href="/admin/dashboard">Logs</a></li>
+                <li><a href="/admin/view/employees">Employees</a></li>
+                <li><a href="/admin/auth/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="action-feedbacks">
+            <div class="feedback error">{{errorMessage}}</div>
+            <div class="feedback success">{{successMessage}}</div>
+        </div>
+        <div class="log">
+            <div class="title">{{data.title}}</div>
+            <div>
+                <span class="employee-name">{{data.employee.name}}</span> - <span
+                    class="employee-department">{{data.employee.department}}</span>
+            </div>
+            <div class="date">
+                <img class="icon" src="https://cdn-icons-png.flaticon.com/128/3884/3884295.png" alt="clock">
+                <span>{{toLocaleDateString data.createdDate}}</span>
+            </div>
+            <div class="description">
+                {{data.description}}
+            </div>
+            <div class="feedbacks-wrapper">
+                <h4>Admin Feedbacks</h4>
+                <div class="feedbacks">
+                    {{#if data.comments}}
+                    {{#each data.comments}}
+                    <div class="feedback">
+                        <div class="commentor">{{this.commentor.name}} - {{this.commentor.department}}</div>
+                        <div class="commented-date">{{toLocaleDateString this.commentedOn}}</div>
+                        <div class="comment">{{this.comment}}</div>
+                    </div>
+                    {{/each}}
+                    {{else}}
+                    <div>No Feedbacks</div>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="feedback-form">
+                <div class="feedback error">{{errors.comment}}</div>
+                <form action="/admin/comment/log/{{data.id}}" method="POST">
+                    <textarea name="comment" placeholder="feedback"></textarea>
+                    <button type="submit">Submit Feedback</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

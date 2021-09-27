@@ -1,59 +1,63 @@
-import jwt from "jsonwebtoken"
-import { deflateSync } from "zlib"
-import { config } from "../config/config"
 import { EmployeeModel } from "../models/employee"
-import { LogModel } from "../models/log"
-import { CreateEmployee, Employee, EmployeeDashboardData, UserTokenPayload } from "../types/employee"
-import { CreateLog, EditLog, Log } from "../types/log"
+import { CreateEmployee, Employee, EmployeeDashboardData } from "../types/employee"
+import { CreateLog, EditLog, EmployeeLogSearchParameter, Log } from "../types/log"
 import { LogService } from "./log"
+import bcrypt from "bcrypt"
+import { config } from "../config/config"
+import { LogModel } from "../models/log"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne({ email })
-    if (employee && employee.password == password)
-        return employee
-    return null
+    if (!employee) {
+        return null
+    }
+    const matched = await bcrypt.compare(password, employee.password)
+    if (!matched) {
+        return null
+    }
+    return employee
 }
 
-const signup = async (employee: CreateEmployee): Promise<boolean> => {
+const create = async (employee: CreateEmployee): Promise<boolean> => {
+    const hashedPassword = await bcrypt.hash(employee.password, config.bcrypt.saltRounds)
+    employee.password = hashedPassword
     return EmployeeModel.create(employee)
 }
 
 const getDashboard = async (id: number): Promise<EmployeeDashboardData> => {
-    const profile = await EmployeeModel.findOne({ id })
-    const logs = await EmployeeService.getLogs(id)
-    return { profile, logs }
-}
-
-const generateToken = async (id: number, email: string): Promise<string> => {
-    const token = jwt.sign({ id, email, userType: 'employee' }, config.jwt.secret, config.jwt.otions)
-    return token
-}
-
-const decodeToken = async (token: string): Promise<UserTokenPayload | null> => {
-    const stringPayload = jwt.verify(token, config.jwt.secret)
-    const payload: UserTokenPayload = JSON.parse(JSON.stringify(stringPayload))
-    if (!payload.id || !payload.email) {
-        return null
+    const employee: Promise<Employee> = EmployeeModel.findOne({ id })
+    const logs: Promise<Log[]> = EmployeeService.getLogs(id)
+    const result = await Promise.all([employee, logs])
+    return {
+        profile: result[0],
+        logs: result[1]
     }
-    return payload
 }
 
 const getLogs = async (id: number): Promise<Log[]> => {
-    return LogService.find({ employeeId: id })
+    return LogService.find({ key: "employeeId", value: id })
+}
+
+const getLog = async (logId: number): Promise<Log> => {
+    return await LogService.findOne(logId)
 }
 
 const createLog = async (createLog: CreateLog): Promise<boolean> => {
     return LogService.create(createLog)
 }
 
+const searchLog = async (searchParameter: EmployeeLogSearchParameter, employeeId: number): Promise<Log[]> => {
+    return LogModel.search({ ...searchParameter, employeeId })
+}
+
 const editLog = async (editLog: EditLog): Promise<boolean> => {
     const log: Log = await LogService.findOne(editLog.id)
-    const createdDate = (new Date(log.createdDate))
-    const todayDate = (new Date())
+    const createdDate = new Date(log.createdDate)
+    const todayDate = new Date()
 
-    if ((createdDate.getFullYear() != todayDate.getFullYear())
-        || (createdDate.getMonth() != todayDate.getMonth())
-        || (createdDate.getDay() != todayDate.getDay())
+    if ((createdDate.getFullYear() !== todayDate.getFullYear())
+        || (createdDate.getMonth() !== todayDate.getMonth())
+        || (createdDate.getDay() !== todayDate.getDay())
     ) {
         return false
     }
@@ -62,11 +66,11 @@ const editLog = async (editLog: EditLog): Promise<boolean> => {
 
 export const EmployeeService = {
     signin,
-    signup,
+    create,
     getDashboard,
-    generateToken,
-    decodeToken,
     getLogs,
+    getLog,
+    searchLog,
     createLog,
     editLog
 }

@@ -1,7 +1,7 @@
-import mysql from 'mysql2/promise'
-import { config } from '../config/config';
+import mysql from "mysql2/promise"
+import { config } from "../config/config"
 
-const pool = mysql.createPool(config.db);
+const pool = mysql.createPool(config.db)
 
 const query = async (query: string, values: any[] = []) => {
     const [result] = await pool.query(query, values)
@@ -11,10 +11,10 @@ const query = async (query: string, values: any[] = []) => {
 
 const checkConnection: () => void = async () => {
     pool.getConnection().then((connection) => {
-        console.log(`Database Connection: Success`)
+        console.log("Database Connection: Success")
         connection.release()
     }).catch(err => {
-        console.log(`Database Connection: Failure`)
+        console.log("Database Connection: Failure")
         console.log(err)
         process.exit(1)
     })
