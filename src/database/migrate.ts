@@ -39,7 +39,7 @@ const allQueries = async (): Promise<void> => {
         ON DELETE CASCADE
         )`
 
-    const insertAdmin = `INSERT INTO employee SET ?`
+    const insertAdmin = "INSERT INTO employee SET ?"
 
     const admin: Employee = {
         id: 1,

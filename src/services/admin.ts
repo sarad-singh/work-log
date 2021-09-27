@@ -4,8 +4,9 @@ import { CreateComment } from "../types/comment"
 import { Employee } from "../types/employee"
 import { CommentService } from "./comment"
 import { LogService } from "./log"
-import { Log } from "../types/log"
+import { AdminLogSearchParameter, Log } from "../types/log"
 import bcrypt from "bcrypt"
+import { LogModel } from "../models/log"
 
 const signin = async (email: string, password: string): Promise<Employee | null> => {
     const employee: Employee = await EmployeeModel.findOne({ email })
@@ -40,6 +41,10 @@ const getLog = async (logId: number): Promise<Log> => {
     return await LogService.findOne(logId)
 }
 
+const searchLog = async (searchParameter: AdminLogSearchParameter): Promise<Log[]> => {
+    return LogModel.search(searchParameter)
+}
+
 const createComment = async (comment: string, commentedBy: number, logId: number): Promise<boolean> => {
     const createComment: CreateComment = {
         comment,
@@ -54,6 +59,7 @@ export const AdminService = {
     signin,
     getDashboard,
     getLog,
+    searchLog,
     getEmployees,
     deleteEmployee,
     createComment

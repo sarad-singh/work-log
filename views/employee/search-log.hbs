@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worklog - Admin Dashboard</title>
+    <title>Worklog - Employee Dashboard</title>
 </head>
 <style>
     body {
@@ -67,6 +67,40 @@
         font-weight: 700;
     }
 
+    .main>.title.small {
+        font-size: 20px;
+    }
+
+    .input-element {
+        margin-bottom: 16px;
+    }
+
+    .search-form-wrapper form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .input-element input[type=text],
+    .input-element input[type=date],
+    .input-element select {
+        border: 1px solid rgb(231, 231, 231);
+        width: 160px;
+        font-size: 14px;
+        box-sizing: border-box;
+        padding: 8px;
+        margin-right: 12px;
+    }
+
+    button[type=submit] {
+        background-color: #111;
+        border: 0;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 6px 8px;
+    }
+
     .logs {
         padding: 0 20px;
     }
@@ -96,10 +130,6 @@
         align-items: center;
     }
 
-    .accordion .body {
-        padding-top: 12px;
-    }
-
     .actions {
         display: flex;
         margin-top: 12px;
@@ -117,10 +147,10 @@
         <div class="title">Worklog</div>
         <nav>
             <ul>
-                <li><a href="/admin/search/log">Search Logs</a></li>
-                <li><a href="/admin/dashboard">Logs</a></li>
-                <li><a href="/admin/view/employees">Employees</a></li>
-                <li><a href="/admin/auth/logout">Logout</a></li>
+                <li><a href="/employee/search/log">Search Logs</a></li>
+                <li><a href="/employee/dashboard">Logs</a></li>
+                <li><a href="/employee/create/log">Create Log</a></li>
+                <li><a href="/employee/auth/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -130,11 +160,27 @@
             <div class="feedback success">{{successMessage}}</div>
         </div>
         <div class="title">
-            Daily Logs
+            Search Logs
         </div>
-        {{#if data.logs}}
+        <div class="search-form-wrapper">
+            <form action="/employee/search/log" method="GET">
+                <div class="input-element">
+                    <label for="title">Log title</label><br>
+                    <input type="text" name="title" id="title" placeholder="title">
+                </div>
+                <div class="input-element">
+                    <label for="department">Created Date</label><br>
+                    <input type="date" name="createdDate">
+                </div>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="title small">
+            Results
+        </div>
+        {{#if logs}}
         <div class="logs">
-            {{#each data.logs}}
+            {{#each logs}}
             <div class="log">
                 <div class="title">{{this.title}}</div>
                 <div>
@@ -149,15 +195,7 @@
                 <div class="actions">
                     <div class="detail-action">
                         <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1/1755.png" alt="feedback">
-                        <span><a href="/admin/view/log/{{this.id}}">View Detail</a></span>
-                    </div>
-                    <div class="feedback-action">
-                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/855/855555.png" alt="feedback">
-                        <span><a href="/admin/view/log/{{this.id}}">Give Feedback</a></span>
-                    </div>
-                    <div class="delete-action">
-                        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" alt="delete">
-                        <span><a href="/admin/delete/log/{{this.id}}">Delete</a></span>
+                        <span><a href="/employee/view/log/{{this.id}}">View Detail</a></span>
                     </div>
                 </div>
             </div>

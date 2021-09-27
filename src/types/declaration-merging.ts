@@ -1,7 +1,7 @@
-import 'express-session'
-import 'express'
+import "express-session"
+import "express"
 
-declare module 'express-session' {
+declare module "express-session" {
     interface SessionData {
         employee: {
             id: number,
@@ -14,7 +14,7 @@ declare module 'express-session' {
     }
 }
 
-declare module 'express' {
+declare module "express" {
     interface Request {
         resourceId?: number
     }

@@ -67,6 +67,40 @@
         font-weight: 700;
     }
 
+    .main>.title.small {
+        font-size: 20px;
+    }
+
+    .input-element {
+        margin-bottom: 16px;
+    }
+
+    .search-form-wrapper form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .input-element input[type=text],
+    .input-element input[type=date],
+    .input-element select {
+        border: 1px solid rgb(231, 231, 231);
+        width: 160px;
+        font-size: 14px;
+        box-sizing: border-box;
+        padding: 8px;
+        margin-right: 12px;
+    }
+
+    button[type=submit] {
+        background-color: #111;
+        border: 0;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 6px 8px;
+    }
+
     .logs {
         padding: 0 20px;
     }
@@ -94,10 +128,6 @@
         margin: 8px 0px;
         display: flex;
         align-items: center;
-    }
-
-    .accordion .body {
-        padding-top: 12px;
     }
 
     .actions {
@@ -130,11 +160,47 @@
             <div class="feedback success">{{successMessage}}</div>
         </div>
         <div class="title">
-            Daily Logs
+            Search Logs
         </div>
-        {{#if data.logs}}
+        <div class="search-form-wrapper">
+            <form action="/admin/search/log" method="GET">
+                <div class="input-element">
+                    <label for="title">Log title</label><br>
+                    <input type="text" name="title" id="title" placeholder="title">
+                </div>
+                <div class="input-element">
+                    <label for="department">Employee Department</label><br>
+                    <select name="department" id="department">
+                        <option value="">Select Department</option>
+                        {{#each departments}}
+                        <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                    </select>
+                    <div class="feedback error">{{errors.department}}</div>
+                </div>
+                <div class="input-element">
+                    <label for="department">Created Date</label><br>
+                    <input type="date" name="createdDate">
+                </div>
+                <div class="input-element">
+                    <label for="employee">Employee</label><br>
+                    <select name="employeeId" id="employeeName">
+                        <option value="">Select Employee</option>
+                        {{#each employees}}
+                        <option value="{{this.id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                    <div class="feedback error">{{errors.department}}</div>
+                </div>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="title small">
+            Results
+        </div>
+        {{#if logs}}
         <div class="logs">
-            {{#each data.logs}}
+            {{#each logs}}
             <div class="log">
                 <div class="title">{{this.title}}</div>
                 <div>

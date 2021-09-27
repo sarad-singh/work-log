@@ -1,8 +1,9 @@
 import { Request, RequestHandler, Response } from "express"
+import { Department, Departments } from "../constansts/department"
 import { FlashMessage } from "../constansts/flashMessage"
 import { EmployeeService } from "../services/employee"
 import { LogService } from "../services/log"
-import { CreateEmployee, EmployeeDashboardData } from "../types/employee"
+import { EmployeeDashboardData } from "../types/employee"
 import { CreateLog, EditLog, Log } from "../types/log"
 
 const getSignup: RequestHandler = (req: Request, res: Response) => {
@@ -14,7 +15,7 @@ const getSignup: RequestHandler = (req: Request, res: Response) => {
 
 const getSignin: RequestHandler = (req: Request, res: Response) => {
     if (req.session.employee) {
-        return res.redirect('/employee/dashboard')
+        return res.redirect("/employee/dashboard")
     }
     return res.render("employee/signin", {
         errorMessage: req.flash(FlashMessage.ERROR),
@@ -72,6 +73,25 @@ const getLog: RequestHandler = async (req: Request, res: Response) => {
     } catch (err) {
         req.flash(FlashMessage.ERROR, "Server error")
         return res.redirect("/employee/dashboard")
+    }
+}
+
+const searchLog: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const employeeId = req.session.employee!.id
+        let logs: Log[] = []
+        if (Object.keys(req.query).length) {
+            logs = await EmployeeService.searchLog(req.query, employeeId)
+        }
+        return res.render("employee/search-log", {
+            errorMessage: req.flash(FlashMessage.ERROR),
+            successMessage: req.flash(FlashMessage.SUCCESS),
+            logs
+        })
+    } catch (err) {
+        console.log(err)
+        req.flash(FlashMessage.ERROR, "Server error")
+        return res.redirect("/employee/search/log")
     }
 }
 
@@ -147,6 +167,7 @@ export const employeeController = {
     getLog,
     signin,
     logout,
+    searchLog,
     createLog,
     editLog
 }
