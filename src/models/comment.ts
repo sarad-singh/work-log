@@ -40,20 +40,20 @@ const findOne = async (logId: number): Promise<Comment> => {
 }
 
 const create = async (createLog: CreateComment): Promise<boolean> => {
-    const query = "INSERT INTO `COMMENT` SET ?"
+    const query = "INSERT INTO `comment` SET ?"
     const result: SqlResultObject = await db.query(query, [createLog])
     return (result.insertId) ? true : false
 }
 
 
 const edit = async ({ id, ...updates }: EditComment): Promise<boolean> => {
-    const query = "UPDATE `COMMENT` SET ? WHERE ?"
+    const query = "UPDATE `comment` SET ? WHERE ?"
     const result: SqlResultObject = await db.query(query, [updates, { id }])
     return (result.affectedRows) ? true : false
 }
 
 const remove = async (param: { id: number } | { logId: number }): Promise<boolean> => {
-    const query = "DELETE FROM `COMMENT` WHERE ?"
+    const query = "DELETE FROM `comment` WHERE ?"
     const result: SqlResultObject = await db.query(query, [param])
     return (result.affectedRows) ? true : false
 }

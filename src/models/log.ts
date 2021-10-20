@@ -5,7 +5,7 @@ import { SqlResultObject } from "../types/types"
 import { CommentModel } from "./comment"
 
 const create = async (createLog: CreateLog): Promise<boolean> => {
-    const query = "INSERT INTO `LOG` SET ?"
+    const query = "INSERT INTO `log` SET ?"
     const date = new Date()
     const result: SqlResultObject = await db.query(query, [{ ...createLog, createdDate: date }])
     return (result.insertId) ? true : false
@@ -21,7 +21,7 @@ const find = async (param?: { key: "id" | "employeeId", value: number }): Promis
     employee.name AS employeeName,  
     employee.email AS employeeEmail,
     employee.department AS employeeDepartment
-    FROM LOG JOIN employee ON employee.id=employeeId 
+    FROM log JOIN employee ON employee.id=employeeId 
     ${whereClause}
     ORDER BY createdDate DESC`
 
@@ -64,13 +64,13 @@ const findOne = async (id: number): Promise<Log> => {
 }
 
 const edit = async ({ id, ...updates }: EditLog): Promise<boolean> => {
-    const query = "UPDATE `LOG` SET ? WHERE ?"
+    const query = "UPDATE `log` SET ? WHERE ?"
     const result: SqlResultObject = await db.query(query, [updates, { id }])
     return (result.affectedRows) ? true : false
 }
 
 const remove = async (id: number): Promise<boolean> => {
-    const query = "DELETE FROM `LOG` WHERE ?"
+    const query = "DELETE FROM `log` WHERE ?"
     const result: SqlResultObject = await db.query(query, [{ id }])
     return (result.affectedRows) ? true : false
 }
@@ -104,7 +104,7 @@ const search = async (searchParameter?: LogSearchParameter): Promise<Log[]> => {
     employee.name AS employeeName,  
     employee.email AS employeeEmail,
     employee.department AS employeeDepartment
-    FROM LOG JOIN employee ON employee.id=employeeId 
+    FROM log JOIN employee ON employee.id=employeeId 
     ${whereClause}
     ORDER BY createdDate DESC`
 
